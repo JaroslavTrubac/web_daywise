@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Support – Daywise</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --green: #3D7B3B;
+    --green-light: #EAF3EA;
+    --text: #1A1A1A;
+    --muted: #6B7280;
+    --border: #E5E7EB;
+    --bg: #F9FAFB;
+  }
+  body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 16px;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    z-index: 100;
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none; color: var(--text);
+    font-weight: 600; font-size: 17px;
+  }
+  .nav-logo-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: var(--green); display: flex; align-items: center; justify-content: center;
+  }
+  .nav-logo-icon svg { width: 18px; height: 18px; fill: none; stroke: white; stroke-width: 2; stroke-linecap: round; }
+  nav a.nav-back {
+    font-size: 14px; color: var(--muted); text-decoration: none;
+    display: flex; align-items: center; gap: 6px;
+  }
+  nav a.nav-back:hover { color: var(--green); }
+
+  /* HERO */
+  .page-hero {
+    background: linear-gradient(160deg, #EAF3EA 0%, #F0F7F0 50%, #F9FAFB 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 60px 24px 48px;
+    text-align: center;
+  }
+  .page-hero .badge {
+    display: inline-block;
+    background: white; color: var(--green);
+    border: 1px solid #C6E0C5;
+    font-size: 12px; font-weight: 600; letter-spacing: .06em;
+    text-transform: uppercase;
+    padding: 4px 12px; border-radius: 20px;
+    margin-bottom: 18px;
+  }
+  .page-hero h1 { font-size: clamp(28px, 5vw, 40px); font-weight: 600; margin-bottom: 12px; }
+  .page-hero p { color: var(--muted); font-size: 17px; max-width: 480px; margin: 0 auto 28px; }
+  .hero-contact-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--green); color: white;
+    padding: 12px 24px; border-radius: 50px;
+    text-decoration: none; font-weight: 600; font-size: 15px;
+    transition: opacity .15s;
+  }
+  .hero-contact-btn:hover { opacity: .85; }
+  .hero-contact-btn svg { width: 16px; height: 16px; fill: none; stroke: white; stroke-width: 2; stroke-linecap: round; }
+
+  /* LAYOUT */
+  .content-wrap {
+    max-width: 860px; margin: 0 auto;
+    padding: 56px 24px 80px;
+  }
+
+  /* QUICK LINKS */
+  .quick-links {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    margin-bottom: 56px;
+  }
+  .ql-card {
+    background: white; border: 1px solid var(--border);
+    border-radius: 14px; padding: 24px;
+    text-decoration: none; color: var(--text);
+    transition: border-color .15s, box-shadow .15s;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .ql-card:hover { border-color: var(--green); box-shadow: 0 4px 20px rgba(61,123,59,.1); }
+  .ql-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--green-light);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .ql-icon svg { width: 20px; height: 20px; fill: none; stroke: var(--green); stroke-width: 2; stroke-linecap: round; }
+  .ql-card h3 { font-size: 15px; font-weight: 600; }
+  .ql-card p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  /* SECTION TITLE */
+  .sec-title {
+    font-size: 22px; font-weight: 600; margin-bottom: 24px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .sec-title::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+
+  /* FAQ */
+  .faq-list { margin-bottom: 56px; }
+  .faq-item {
+    background: white; border: 1px solid var(--border);
+    border-radius: 12px; margin-bottom: 10px;
+    overflow: hidden;
+  }
+  .faq-q {
+    width: 100%; text-align: left;
+    background: none; border: none; cursor: pointer;
+    padding: 18px 20px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500;
+    color: var(--text);
+  }
+  .faq-q:hover { background: var(--bg); }
+  .faq-chevron {
+    flex-shrink: 0; width: 20px; height: 20px;
+    border: 1.5px solid var(--border); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform .2s;
+  }
+  .faq-chevron svg { width: 10px; height: 10px; fill: none; stroke: var(--muted); stroke-width: 2.5; stroke-linecap: round; }
+  .faq-item.open .faq-chevron { transform: rotate(180deg); border-color: var(--green); }
+  .faq-item.open .faq-chevron svg { stroke: var(--green); }
+  .faq-a {
+    display: none;
+    padding: 0 20px 18px;
+    color: #374151; font-size: 15px; line-height: 1.7;
+    border-top: 1px solid var(--border);
+  }
+  .faq-item.open .faq-a { display: block; padding-top: 14px; }
+
+  /* CONTACT */
+  .contact-section { margin-bottom: 56px; }
+  .contact-card {
+    background: white; border: 1px solid var(--border);
+    border-radius: 16px; padding: 32px;
+    display: flex; align-items: center; gap: 24px;
+  }
+  .contact-avatar {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: var(--green-light);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 26px; font-weight: 600; color: var(--green);
+  }
+  .contact-info h3 { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+  .contact-info p { color: var(--muted); font-size: 14px; margin-bottom: 12px; }
+  .contact-info a.cta {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--green); color: white;
+    padding: 10px 18px; border-radius: 50px;
+    text-decoration: none; font-weight: 600; font-size: 14px;
+  }
+  .contact-info a.cta:hover { opacity: .85; }
+  .response-badge {
+    display: inline-block; background: var(--green-light);
+    color: var(--green); font-size: 12px; font-weight: 600;
+    padding: 3px 10px; border-radius: 20px; margin-left: 8px;
+  }
+
+  /* DELETE DATA */
+  .delete-section {
+    background: #FFF8EC; border: 1px solid #FDE68A;
+    border-radius: 14px; padding: 28px 32px;
+    margin-bottom: 56px;
+  }
+  .delete-section h2 { font-size: 18px; font-weight: 600; margin-bottom: 10px; }
+  .delete-section p { color: #374151; font-size: 15px; margin-bottom: 8px; }
+  .delete-section ol { padding-left: 22px; }
+  .delete-section li { color: #374151; font-size: 15px; margin-bottom: 6px; }
+  .delete-section a { color: var(--green); }
+
+  /* FOOTER */
+  footer {
+    background: white; border-top: 1px solid var(--border);
+    padding: 32px 24px;
+    text-align: center;
+    color: var(--muted); font-size: 14px;
+  }
+  footer a { color: var(--green); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+  .footer-links { display: flex; gap: 24px; justify-content: center; margin-bottom: 12px; flex-wrap: wrap; }
+
+  @media (max-width: 680px) {
+    .quick-links { grid-template-columns: 1fr; }
+    .contact-card { flex-direction: column; text-align: center; }
+    .content-wrap { padding: 32px 16px 60px; }
+    .delete-section { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">
+      <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="4"/><path d="M10 2v2M10 16v2M2 10h2M16 10h2"/></svg>
+    </div>
+    Daywise
+  </a>
+  <a href="index.html" class="nav-back">← Back to app</a>
+</nav>
+
+<div class="page-hero">
+  <div class="badge">Support</div>
+  <h1>How can we help?</h1>
+  <p>Find answers below, or get in touch — we typically reply within 24 hours.</p>
+  <a href="mailto:jaroslav.trubac@gmail.com" class="hero-contact-btn">
+    <svg viewBox="0 0 20 20"><rect x="2" y="4" width="16" height="12" rx="2"/><path d="M2 7l8 5 8-5"/></svg>
+    Email us
+  </a>
+</div>
+
+<div class="content-wrap">
+
+  <!-- QUICK LINKS -->
+  <div class="quick-links">
+    <a href="#faq" class="ql-card">
+      <div class="ql-icon">
+        <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"/><path d="M10 14v-1M10 10c0-1.5 2-2 2-3.5a2 2 0 00-4 0"/></svg>
+      </div>
+      <h3>FAQ</h3>
+      <p>Answers to the most common questions about Daywise.</p>
+    </a>
+    <a href="#contact" class="ql-card">
+      <div class="ql-icon">
+        <svg viewBox="0 0 20 20"><path d="M3 4h14a1 1 0 011 1v8a1 1 0 01-1 1H3a1 1 0 01-1-1V5a1 1 0 011-1z"/><path d="M2 6l8 5 8-5"/></svg>
+      </div>
+      <h3>Contact us</h3>
+      <p>Reach out directly — we reply within 24 hours on business days.</p>
+    </a>
+    <a href="#delete-data" class="ql-card">
+      <div class="ql-icon">
+        <svg viewBox="0 0 20 20"><path d="M5 5h10l-1 10H6L5 5z"/><path d="M3 5h14M8 5V3h4v2"/></svg>
+      </div>
+      <h3>Delete my data</h3>
+      <p>Instructions to remove your data and delete the app.</p>
+    </a>
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-list" id="faq">
+    <div class="sec-title">Frequently asked questions</div>
+
+    <div class="faq-item">
+      <button class="faq-q">
+        Why does Daywise need my location?
+        <span class="faq-chevron"><svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </button>
+      <div class="faq-a">
+        Location is used solely to fetch the weather forecast for your area. Without it, we can't tell you whether conditions are good for a run or whether to carry an umbrella. We request location only while you have the app open — we do not track you in the background. You can grant "While using the app" permission in iOS Settings → Daywise → Location.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">
+        How accurate are the weather recommendations?
+        <span class="faq-chevron"><svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </button>
+      <div class="faq-a">
+        Daywise uses professional-grade weather data from a third-party weather provider. Forecast accuracy depends on your location and how far ahead you're looking — same-day forecasts are highly reliable, while multi-day forecasts carry more uncertainty. Always use your own judgment, especially for important outdoor plans.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">
+        What does the Move score mean?
+        <span class="faq-chevron"><svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </button>
+      <div class="faq-a">
+        The Move score (0–100) reflects how suitable the current weather is for outdoor activity. It factors in temperature, wind speed, precipitation probability, and UV index. A score above 70 means great conditions; below 40 means you might prefer indoor options. The score isn't a strict rule — it's a quick shorthand to help you decide.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">
+        Is the Feel section medical advice?
+        <span class="faq-chevron"><svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </button>
+      <div class="faq-a">
+        No. The Feel section provides general information about how weather conditions (atmospheric pressure, humidity, temperature swings) can correlate with common feelings like fatigue, headaches, or joint discomfort. It is not medical advice and does not account for your individual health situation. Consult a healthcare professional for any medical concerns.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">
+        How do I enable or disable daily notifications?
+        <span class="faq-chevron"><svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </button>
+      <div class="faq-a">
+        Go to the Settings tab inside the app and toggle "Daily briefing notifications". You can also manage all notifications from iOS Settings → Notifications → Daywise. We'll only send you the morning brief — no marketing or spam.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">
+        The weather shown seems wrong for my location. What should I do?
+        <span class="faq-chevron"><svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </button>
+      <div class="faq-a">
+        First, make sure location permission is set to "While using the app" in iOS Settings → Daywise → Location. If you've recently moved or the forecast still seems off, try closing and reopening the app to trigger a fresh weather fetch. If the issue persists, please email us with your city/country and we'll investigate.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">
+        How do I cancel my subscription?
+        <span class="faq-chevron"><svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </button>
+      <div class="faq-a">
+        Subscriptions are managed through the App Store. To cancel: open iOS Settings → tap your name → Subscriptions → Daywise → Cancel subscription. Make sure to cancel at least 24 hours before the renewal date to avoid being charged. If you need help, contact us and we'll guide you through it.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">
+        Does Daywise work offline?
+        <span class="faq-chevron"><svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </button>
+      <div class="faq-a">
+        The most recent brief is cached on your device and accessible without internet. However, to get updated recommendations, the app needs a connection to fetch the latest weather data. We recommend opening the app while connected in the morning for the freshest daily brief.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">
+        Which iPhone models are supported?
+        <span class="faq-chevron"><svg viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </button>
+      <div class="faq-a">
+        Daywise supports iPhone running iOS 16.0 or later. We recommend an up-to-date version of iOS for the best experience. Android support is planned for a future release.
+      </div>
+    </div>
+
+  </div><!-- /faq -->
+
+  <!-- CONTACT -->
+  <div class="contact-section" id="contact">
+    <div class="sec-title">Get in touch</div>
+    <div class="contact-card">
+      <div class="contact-avatar">J</div>
+      <div class="contact-info">
+        <h3>Jaroslav Trubač <span class="response-badge">replies within 24h</span></h3>
+        <p>Developer & founder of Daywise. Feel free to reach out with bugs, feature requests, feedback, or anything else.</p>
+        <a href="mailto:jaroslav.trubac@gmail.com" class="cta">
+          jaroslav.trubac@gmail.com
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- DELETE DATA -->
+  <div class="delete-section" id="delete-data">
+    <h2>🗑 How to delete your data</h2>
+    <p>Daywise does not require an account and stores most data locally on your device. To remove all data:</p>
+    <ol>
+      <li>Open <strong>iOS Settings</strong> → scroll down to <strong>Daywise</strong></li>
+      <li>Tap <strong>"Delete App"</strong> — this removes the app and all locally stored preferences and cached weather data</li>
+      <li>Confirm deletion when prompted</li>
+    </ol>
+    <p style="margin-top:12px;">If you have concerns about any other data (e.g. from crash reporting), email us at <a href="mailto:jaroslav.trubac@gmail.com">jaroslav.trubac@gmail.com</a> with the subject line "Data deletion request" and we will process it within 30 days in line with GDPR.</p>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-links">
+    <a href="daywise-privacy.html">Privacy Policy</a>
+    <a href="daywise-terms.html">Terms of Service</a>
+    <a href="daywise-support.html">Support</a>
+  </div>
+  <p>© 2026 Daywise · Jaroslav Trubač · <a href="mailto:jaroslav.trubac@gmail.com">jaroslav.trubac@gmail.com</a></p>
+</footer>
+
+<script>
+  // FAQ accordion
+  document.querySelectorAll('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      // Close all
+      document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+      // Toggle clicked
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+</script>
+
+</body>
+</html>

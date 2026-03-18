@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Terms of Service – Daywise</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --green: #3D7B3B;
+    --green-light: #EAF3EA;
+    --text: #1A1A1A;
+    --muted: #6B7280;
+    --border: #E5E7EB;
+    --bg: #F9FAFB;
+  }
+  body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 16px;
+  }
+  nav {
+    position: sticky; top: 0;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    z-index: 100;
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none; color: var(--text);
+    font-weight: 600; font-size: 17px;
+  }
+  .nav-logo-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: var(--green); display: flex; align-items: center; justify-content: center;
+  }
+  .nav-logo-icon svg { width: 18px; height: 18px; fill: none; stroke: white; stroke-width: 2; }
+  nav a.nav-back {
+    font-size: 14px; color: var(--muted); text-decoration: none;
+    display: flex; align-items: center; gap: 6px;
+  }
+  nav a.nav-back:hover { color: var(--green); }
+  .page-hero {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 52px 24px 40px;
+    text-align: center;
+  }
+  .page-hero .badge {
+    display: inline-block;
+    background: var(--green-light); color: var(--green);
+    font-size: 12px; font-weight: 600; letter-spacing: .06em;
+    text-transform: uppercase;
+    padding: 4px 12px; border-radius: 20px;
+    margin-bottom: 16px;
+  }
+  .page-hero h1 { font-size: clamp(26px, 5vw, 36px); font-weight: 600; margin-bottom: 10px; }
+  .page-hero .meta { color: var(--muted); font-size: 14px; }
+  .page-hero .meta span { margin: 0 6px; }
+  .content-wrap {
+    max-width: 740px; margin: 0 auto;
+    padding: 56px 24px 80px;
+  }
+  .toc {
+    background: white; border: 1px solid var(--border);
+    border-radius: 12px; padding: 24px 28px;
+    margin-bottom: 48px;
+  }
+  .toc h3 { font-size: 13px; font-weight: 600; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 14px; }
+  .toc ol { padding-left: 20px; }
+  .toc li { margin-bottom: 6px; }
+  .toc a { color: var(--green); text-decoration: none; font-size: 15px; }
+  .toc a:hover { text-decoration: underline; }
+  .policy-section { margin-bottom: 48px; }
+  .policy-section h2 {
+    font-size: 20px; font-weight: 600;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--green-light);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--green); color: white;
+    font-size: 13px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .policy-section p { color: #374151; margin-bottom: 12px; }
+  .policy-section ul, .policy-section ol { padding-left: 22px; margin-bottom: 12px; }
+  .policy-section li { color: #374151; margin-bottom: 6px; }
+  .policy-section strong { color: var(--text); }
+  .highlight-box {
+    background: var(--green-light);
+    border-left: 3px solid var(--green);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 15px; color: #1F4620;
+  }
+  .warn-box {
+    background: #FFF8EC;
+    border-left: 3px solid #D97706;
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 15px; color: #92400E;
+  }
+  footer {
+    background: white; border-top: 1px solid var(--border);
+    padding: 32px 24px;
+    text-align: center;
+    color: var(--muted); font-size: 14px;
+  }
+  footer a { color: var(--green); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+  .footer-links { display: flex; gap: 24px; justify-content: center; margin-bottom: 12px; flex-wrap: wrap; }
+  @media (max-width: 600px) {
+    .content-wrap { padding: 32px 16px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">
+      <svg viewBox="0 0 20 20"><circle cx="10" cy="8" r="4"/><path d="M10 14 C5 14 2 16.5 2 18" stroke-linecap="round"/><path d="M10 14 C15 14 18 16.5 18 18" stroke-linecap="round"/></svg>
+    </div>
+    Daywise
+  </a>
+  <a href="index.html" class="nav-back">← Back to app</a>
+</nav>
+
+<div class="page-hero">
+  <div class="badge">Legal</div>
+  <h1>Terms of Service</h1>
+  <p class="meta">
+    <span>Effective date: March 18, 2026</span>
+    <span>·</span>
+    <span>Last updated: March 18, 2026</span>
+  </p>
+</div>
+
+<div class="content-wrap">
+
+  <div class="highlight-box">
+    <strong>Short version:</strong> By using Daywise, you agree to these terms. The app gives you weather-based daily guidance — it's informational only, not medical or professional advice. We may update the app and these terms over time. If something isn't working, reach out and we'll help.
+  </div>
+
+  <div class="toc">
+    <h3>Contents</h3>
+    <ol>
+      <li><a href="#acceptance">Acceptance of terms</a></li>
+      <li><a href="#description">Description of service</a></li>
+      <li><a href="#disclaimer">Disclaimer – not professional advice</a></li>
+      <li><a href="#license">License to use the app</a></li>
+      <li><a href="#acceptable-use">Acceptable use</a></li>
+      <li><a href="#ip">Intellectual property</a></li>
+      <li><a href="#subscriptions">Subscriptions &amp; payments</a></li>
+      <li><a href="#availability">Availability &amp; changes</a></li>
+      <li><a href="#liability">Limitation of liability</a></li>
+      <li><a href="#governing-law">Governing law</a></li>
+      <li><a href="#contact-terms">Contact</a></li>
+    </ol>
+  </div>
+
+  <!-- 1 -->
+  <div class="policy-section" id="acceptance">
+    <h2><span class="section-num">1</span> Acceptance of terms</h2>
+    <p>By downloading, installing, or using the Daywise application ("the App"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree, please do not use the App.</p>
+    <p>These Terms apply to all users of the App regardless of how you access it (iOS device, TestFlight beta, etc.).</p>
+    <p>We may update these Terms from time to time. Your continued use of the App after an update constitutes acceptance of the revised Terms.</p>
+  </div>
+
+  <!-- 2 -->
+  <div class="policy-section" id="description">
+    <h2><span class="section-num">2</span> Description of service</h2>
+    <p>Daywise is a weather-intelligence application that translates current and forecasted weather conditions into practical daily guidance across three dimensions:</p>
+    <ul>
+      <li><strong>Move</strong> – activity and outdoor exercise recommendations based on weather conditions.</li>
+      <li><strong>Feel</strong> – information about how weather (pressure, humidity, temperature) may affect your physical well-being.</li>
+      <li><strong>Live</strong> – smart decisions for the day: what to wear, whether to carry an umbrella, when to schedule outdoor plans.</li>
+    </ul>
+    <p>The service relies on third-party weather data and is provided on an "as is" basis. Weather forecasting is inherently uncertain and recommendations may not always be accurate.</p>
+  </div>
+
+  <!-- 3 -->
+  <div class="policy-section" id="disclaimer">
+    <h2><span class="section-num">3</span> Disclaimer – not professional advice</h2>
+    <div class="warn-box">
+      <strong>Important:</strong> Daywise is an informational tool only. Nothing in the App constitutes medical, health, fitness, or professional advice of any kind.
+    </div>
+    <p>The "Feel" section and any biometric or well-being related content is based on general correlations between weather parameters and human physiology. It does not account for your individual health status, medical conditions, or personal circumstances.</p>
+    <p>Always consult a qualified health professional before making decisions about physical activity, medication, or your health based on any information provided by this App.</p>
+    <p>We are not liable for any harm, injury, or loss arising from reliance on information provided by Daywise.</p>
+  </div>
+
+  <!-- 4 -->
+  <div class="policy-section" id="license">
+    <h2><span class="section-num">4</span> License to use the app</h2>
+    <p>Subject to these Terms, we grant you a personal, non-exclusive, non-transferable, revocable licence to download and use the App on devices you own or control, for your personal, non-commercial purposes.</p>
+    <p>This licence does not include:</p>
+    <ul>
+      <li>Modifying, copying, or distributing any part of the App</li>
+      <li>Reverse engineering, decompiling, or disassembling the App</li>
+      <li>Using the App for commercial purposes without our written consent</li>
+      <li>Removing any proprietary notices from the App</li>
+    </ul>
+  </div>
+
+  <!-- 5 -->
+  <div class="policy-section" id="acceptable-use">
+    <h2><span class="section-num">5</span> Acceptable use</h2>
+    <p>You agree not to use the App to:</p>
+    <ul>
+      <li>Violate any applicable laws or regulations</li>
+      <li>Attempt to gain unauthorised access to any part of our systems</li>
+      <li>Transmit harmful, offensive, or unlawful content through any feedback channels</li>
+      <li>Interfere with the proper functioning of the App</li>
+      <li>Use automated tools (bots, scrapers) to access or extract data from the App</li>
+    </ul>
+    <p>We reserve the right to terminate your access to the App if you violate these Terms.</p>
+  </div>
+
+  <!-- 6 -->
+  <div class="policy-section" id="ip">
+    <h2><span class="section-num">6</span> Intellectual property</h2>
+    <p>All content, design, graphics, code, and branding within the App — including the Daywise name, logo, and the Move/Feel/Live framework — are the intellectual property of Jaroslav Trubač and are protected by applicable copyright and trademark laws.</p>
+    <p>Weather data is provided by third-party data providers and is subject to their respective terms and licences.</p>
+    <p>You may not use our brand, logo, or content without prior written permission.</p>
+  </div>
+
+  <!-- 7 -->
+  <div class="policy-section" id="subscriptions">
+    <h2><span class="section-num">7</span> Subscriptions &amp; payments</h2>
+    <p>Daywise may offer free and premium subscription tiers. Free features are available without payment. Premium features, if offered, will be clearly marked in the App.</p>
+    <p>All in-app purchases are processed by Apple via the App Store. Payments, refunds, and subscription management are governed by <a href="https://www.apple.com/legal/internet-services/itunes/" target="_blank" rel="noopener">Apple's Media Services Terms and Conditions</a>.</p>
+    <p><strong>Subscriptions renew automatically</strong> unless cancelled at least 24 hours before the end of the current period. To manage or cancel your subscription, go to your Apple ID settings.</p>
+    <p>We do not store or process payment card information.</p>
+  </div>
+
+  <!-- 8 -->
+  <div class="policy-section" id="availability">
+    <h2><span class="section-num">8</span> Availability &amp; changes</h2>
+    <p>We aim to keep Daywise available and up to date, but we do not guarantee uninterrupted access. The App may be temporarily unavailable due to maintenance, updates, or circumstances beyond our control.</p>
+    <p>We reserve the right to modify, suspend, or discontinue any part of the App at any time. We will endeavour to provide reasonable notice of significant changes.</p>
+    <p>Weather data accuracy depends on third-party providers. We are not responsible for errors in weather data supplied by those providers.</p>
+  </div>
+
+  <!-- 9 -->
+  <div class="policy-section" id="liability">
+    <h2><span class="section-num">9</span> Limitation of liability</h2>
+    <p>To the maximum extent permitted by applicable law, Daywise and Jaroslav Trubač shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of or inability to use the App.</p>
+    <p>Our total liability for any claim arising from these Terms or your use of the App shall not exceed the amount you paid for the App in the 12 months preceding the claim (or €10 if you have not made any payments).</p>
+    <p>Some jurisdictions do not allow the exclusion or limitation of certain liabilities — in such cases, the above limitations apply to the fullest extent permitted by law.</p>
+  </div>
+
+  <!-- 10 -->
+  <div class="policy-section" id="governing-law">
+    <h2><span class="section-num">10</span> Governing law</h2>
+    <p>These Terms are governed by and construed in accordance with the laws of the <strong>Czech Republic</strong>, without regard to conflict of law principles.</p>
+    <p>Any disputes arising from these Terms shall be subject to the exclusive jurisdiction of the courts of the Czech Republic, unless mandatory consumer protection laws in your country of residence provide for alternative dispute resolution mechanisms.</p>
+    <p>If you are a consumer in the EU, you may also use the <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">EU Online Dispute Resolution platform</a>.</p>
+  </div>
+
+  <!-- 11 -->
+  <div class="policy-section" id="contact-terms">
+    <h2><span class="section-num">11</span> Contact</h2>
+    <p>Questions about these Terms? We're happy to help.</p>
+    <p>
+      <strong>Jaroslav Trubač</strong><br/>
+      Email: <a href="mailto:jaroslav.trubac@gmail.com">jaroslav.trubac@gmail.com</a>
+    </p>
+    <p>For support questions, please visit our <a href="daywise-support.html">Support page</a>.</p>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-links">
+    <a href="daywise-privacy.html">Privacy Policy</a>
+    <a href="daywise-terms.html">Terms of Service</a>
+    <a href="daywise-support.html">Support</a>
+  </div>
+  <p>© 2026 Daywise · Jaroslav Trubač · <a href="mailto:jaroslav.trubac@gmail.com">jaroslav.trubac@gmail.com</a></p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Privacy Policy – Daywise</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --green: #3D7B3B;
+    --green-light: #EAF3EA;
+    --text: #1A1A1A;
+    --muted: #6B7280;
+    --border: #E5E7EB;
+    --bg: #F9FAFB;
+  }
+  body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 16px;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    z-index: 100;
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none; color: var(--text);
+    font-weight: 600; font-size: 17px;
+  }
+  .nav-logo-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    background: var(--green); display: flex; align-items: center; justify-content: center;
+  }
+  .nav-logo-icon svg { width: 18px; height: 18px; fill: white; }
+  nav a.nav-back {
+    font-size: 14px; color: var(--muted); text-decoration: none;
+    display: flex; align-items: center; gap: 6px;
+  }
+  nav a.nav-back:hover { color: var(--green); }
+
+  /* HERO BAND */
+  .page-hero {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 52px 24px 40px;
+    text-align: center;
+  }
+  .page-hero .badge {
+    display: inline-block;
+    background: var(--green-light); color: var(--green);
+    font-size: 12px; font-weight: 600; letter-spacing: .06em;
+    text-transform: uppercase;
+    padding: 4px 12px; border-radius: 20px;
+    margin-bottom: 16px;
+  }
+  .page-hero h1 { font-size: clamp(26px, 5vw, 36px); font-weight: 600; margin-bottom: 10px; }
+  .page-hero .meta { color: var(--muted); font-size: 14px; }
+  .page-hero .meta span { margin: 0 6px; }
+
+  /* CONTENT */
+  .content-wrap {
+    max-width: 740px; margin: 0 auto;
+    padding: 56px 24px 80px;
+  }
+
+  /* TOC */
+  .toc {
+    background: white; border: 1px solid var(--border);
+    border-radius: 12px; padding: 24px 28px;
+    margin-bottom: 48px;
+  }
+  .toc h3 { font-size: 13px; font-weight: 600; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 14px; }
+  .toc ol { padding-left: 20px; }
+  .toc li { margin-bottom: 6px; }
+  .toc a { color: var(--green); text-decoration: none; font-size: 15px; }
+  .toc a:hover { text-decoration: underline; }
+
+  /* SECTIONS */
+  .policy-section { margin-bottom: 48px; }
+  .policy-section h2 {
+    font-size: 20px; font-weight: 600;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--green-light);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-num {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--green); color: white;
+    font-size: 13px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .policy-section p { color: #374151; margin-bottom: 12px; }
+  .policy-section ul, .policy-section ol {
+    padding-left: 22px; margin-bottom: 12px;
+  }
+  .policy-section li { color: #374151; margin-bottom: 6px; }
+  .policy-section strong { color: var(--text); }
+
+  .highlight-box {
+    background: var(--green-light);
+    border-left: 3px solid var(--green);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 15px; color: #1F4620;
+  }
+
+  .data-table {
+    width: 100%; border-collapse: collapse;
+    margin: 16px 0; font-size: 14px;
+  }
+  .data-table th {
+    background: var(--green-light);
+    color: var(--green); font-weight: 600;
+    padding: 10px 14px; text-align: left;
+    border-bottom: 1px solid #C6E0C5;
+  }
+  .data-table td {
+    padding: 10px 14px; border-bottom: 1px solid var(--border);
+    color: #374151; vertical-align: top;
+  }
+  .data-table tr:last-child td { border-bottom: none; }
+
+  /* FOOTER */
+  footer {
+    background: white; border-top: 1px solid var(--border);
+    padding: 32px 24px;
+    text-align: center;
+    color: var(--muted); font-size: 14px;
+  }
+  footer a { color: var(--green); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+  .footer-links { display: flex; gap: 24px; justify-content: center; margin-bottom: 12px; flex-wrap: wrap; }
+
+  @media (max-width: 600px) {
+    .content-wrap { padding: 32px 16px 60px; }
+    .toc { padding: 18px; }
+    .data-table { font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">
+      <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="5"/><line x1="10" y1="1" x2="10" y2="4" stroke="white" stroke-width="2"/><line x1="10" y1="16" x2="10" y2="19" stroke="white" stroke-width="2"/><line x1="1" y1="10" x2="4" y2="10" stroke="white" stroke-width="2"/><line x1="16" y1="10" x2="19" y2="10" stroke="white" stroke-width="2"/></svg>
+    </div>
+    Daywise
+  </a>
+  <a href="index.html" class="nav-back">
+    ← Back to app
+  </a>
+</nav>
+
+<div class="page-hero">
+  <div class="badge">Legal</div>
+  <h1>Privacy Policy</h1>
+  <p class="meta">
+    <span>Effective date: March 18, 2026</span>
+    <span>·</span>
+    <span>Last updated: March 18, 2026</span>
+  </p>
+</div>
+
+<div class="content-wrap">
+
+  <div class="highlight-box">
+    <strong>Short version:</strong> Daywise helps you understand how today's weather affects your body and daily plans. We use your location only to fetch local weather. We don't sell your data, create advertising profiles, or share personal information with third parties beyond what is necessary to run the app.
+  </div>
+
+  <div class="toc">
+    <h3>Contents</h3>
+    <ol>
+      <li><a href="#who-we-are">Who we are</a></li>
+      <li><a href="#data-collected">Data we collect</a></li>
+      <li><a href="#how-we-use">How we use your data</a></li>
+      <li><a href="#third-parties">Third-party services</a></li>
+      <li><a href="#data-storage">Data storage & retention</a></li>
+      <li><a href="#your-rights">Your rights (GDPR)</a></li>
+      <li><a href="#children">Children's privacy</a></li>
+      <li><a href="#changes">Changes to this policy</a></li>
+      <li><a href="#contact">Contact us</a></li>
+    </ol>
+  </div>
+
+  <!-- 1 -->
+  <div class="policy-section" id="who-we-are">
+    <h2><span class="section-num">1</span> Who we are</h2>
+    <p>Daywise is a mobile application that translates weather forecasts into practical daily guidance across three areas: movement (Move), physical well-being (Feel), and daily planning (Live).</p>
+    <p>The app is developed and operated by <strong>Jaroslav Trubač</strong> ("we", "us", or "our"), reachable at <a href="mailto:jaroslav.trubac@gmail.com">jaroslav.trubac@gmail.com</a>.</p>
+    <p>For users in the European Union, we act as the <strong>data controller</strong> under the General Data Protection Regulation (GDPR).</p>
+  </div>
+
+  <!-- 2 -->
+  <div class="policy-section" id="data-collected">
+    <h2><span class="section-num">2</span> Data we collect</h2>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Data type</th>
+          <th>What exactly</th>
+          <th>Why</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Location</strong></td>
+          <td>Approximate or precise GPS coordinates (only when the app is in use)</td>
+          <td>To fetch local weather conditions relevant to your day</td>
+        </tr>
+        <tr>
+          <td><strong>Weather data</strong></td>
+          <td>Fetched from a third-party weather API based on your location</td>
+          <td>Core app function – weather drives all recommendations</td>
+        </tr>
+        <tr>
+          <td><strong>App preferences</strong></td>
+          <td>Settings, notification preferences, activity preferences</td>
+          <td>To personalise your brief and remember your choices</td>
+        </tr>
+        <tr>
+          <td><strong>Crash & diagnostic data</strong></td>
+          <td>Anonymous crash reports, app version, device OS version</td>
+          <td>To fix bugs and improve stability</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p><strong>We do not collect:</strong> your name, email address, phone number, photos, contacts, health records, financial data, or browsing history.</p>
+    <p>Daywise does <strong>not</strong> require you to create an account.</p>
+  </div>
+
+  <!-- 3 -->
+  <div class="policy-section" id="how-we-use">
+    <h2><span class="section-num">3</span> How we use your data</h2>
+    <p>We use the data described above solely to:</p>
+    <ul>
+      <li>Deliver weather-based daily recommendations (Move, Feel, Live)</li>
+      <li>Send optional daily briefing notifications (only if you opt in)</li>
+      <li>Remember your in-app settings across sessions</li>
+      <li>Diagnose crashes and improve app performance</li>
+    </ul>
+    <p>We do <strong>not</strong> use your data for advertising, profiling, or any purpose unrelated to the core app functionality.</p>
+    <p>Legal basis under GDPR: <strong>Legitimate interest</strong> (providing the service you requested) and <strong>consent</strong> (for notifications and location access, which you can withdraw at any time).</p>
+  </div>
+
+  <!-- 4 -->
+  <div class="policy-section" id="third-parties">
+    <h2><span class="section-num">4</span> Third-party services</h2>
+    <p>To provide accurate weather data and maintain app quality, we use the following third-party services:</p>
+    <ul>
+      <li><strong>Weather API provider</strong> – receives your approximate location coordinates to return weather data. No personal identifiers are transmitted.</li>
+      <li><strong>Apple App Store / TestFlight</strong> – subject to Apple's own privacy policy when downloading or updating the app.</li>
+      <li><strong>Crash reporting tool</strong> (if applicable) – receives anonymised diagnostic data only.</li>
+    </ul>
+    <p>We do not integrate advertising SDKs, social media tracking pixels, or data broker services.</p>
+  </div>
+
+  <!-- 5 -->
+  <div class="policy-section" id="data-storage">
+    <h2><span class="section-num">5</span> Data storage &amp; retention</h2>
+    <p>Most data (weather cache, preferences) is stored <strong>locally on your device</strong> and never leaves it except as described in Section 4.</p>
+    <p>Crash and diagnostic data, if collected, is retained for a maximum of <strong>12 months</strong> and then automatically deleted.</p>
+    <p>Location data is used in real time to fetch weather and is <strong>not stored</strong> on our servers.</p>
+    <p>You can delete all locally stored app data at any time by uninstalling the app from your device.</p>
+  </div>
+
+  <!-- 6 -->
+  <div class="policy-section" id="your-rights">
+    <h2><span class="section-num">6</span> Your rights (GDPR)</h2>
+    <p>If you are located in the European Economic Area, you have the following rights regarding your personal data:</p>
+    <ul>
+      <li><strong>Right of access</strong> – you can request a copy of any personal data we hold about you.</li>
+      <li><strong>Right to rectification</strong> – you can ask us to correct inaccurate data.</li>
+      <li><strong>Right to erasure</strong> – you can ask us to delete your data ("right to be forgotten").</li>
+      <li><strong>Right to restriction</strong> – you can ask us to limit how we use your data.</li>
+      <li><strong>Right to data portability</strong> – you can request your data in a machine-readable format.</li>
+      <li><strong>Right to object</strong> – you can object to processing based on legitimate interests.</li>
+      <li><strong>Right to withdraw consent</strong> – you can revoke location or notification permissions at any time in your device settings.</li>
+    </ul>
+    <p>To exercise any of these rights, contact us at <a href="mailto:jaroslav.trubac@gmail.com">jaroslav.trubac@gmail.com</a>. We will respond within 30 days.</p>
+    <p>You also have the right to lodge a complaint with your local data protection authority (in the Czech Republic: <strong>Úřad pro ochranu osobních údajů</strong>, <a href="https://www.uoou.cz" target="_blank" rel="noopener">uoou.cz</a>).</p>
+  </div>
+
+  <!-- 7 -->
+  <div class="policy-section" id="children">
+    <h2><span class="section-num">7</span> Children's privacy</h2>
+    <p>Daywise is not directed at children under the age of <strong>13</strong> (or under 16 in certain EU member states). We do not knowingly collect personal data from children.</p>
+    <p>If you believe a child has provided us with personal information, please contact us immediately at <a href="mailto:jaroslav.trubac@gmail.com">jaroslav.trubac@gmail.com</a> and we will delete it promptly.</p>
+  </div>
+
+  <!-- 8 -->
+  <div class="policy-section" id="changes">
+    <h2><span class="section-num">8</span> Changes to this policy</h2>
+    <p>We may update this Privacy Policy from time to time. When we do, we will update the "Last updated" date at the top of this page.</p>
+    <p>For significant changes, we will notify you via an in-app notice or push notification (if you have them enabled) at least 14 days before the change takes effect.</p>
+    <p>Continued use of the app after the effective date constitutes your acceptance of the updated policy.</p>
+  </div>
+
+  <!-- 9 -->
+  <div class="policy-section" id="contact">
+    <h2><span class="section-num">9</span> Contact us</h2>
+    <p>If you have any questions, requests, or concerns about this Privacy Policy or your data, please reach out:</p>
+    <p>
+      <strong>Jaroslav Trubač</strong><br/>
+      Email: <a href="mailto:jaroslav.trubac@gmail.com">jaroslav.trubac@gmail.com</a>
+    </p>
+    <p>We aim to respond to all privacy-related enquiries within <strong>5 business days</strong>.</p>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-links">
+    <a href="daywise-privacy.html">Privacy Policy</a>
+    <a href="daywise-terms.html">Terms of Service</a>
+    <a href="daywise-support.html">Support</a>
+  </div>
+  <p>© 2026 Daywise · Jaroslav Trubač · <a href="mailto:jaroslav.trubac@gmail.com">jaroslav.trubac@gmail.com</a></p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="en" data-sky="dawn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daywise — Know your day before it starts</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── TOKENS ── */
+    :root {
+      --text:       #1A1A1A;
+      --text-2:     #5A5A5A;
+      --text-3:     #9A9A9A;
+      --accent:     #3D7B3B;
+      --accent-dim: rgba(61,123,59,0.10);
+      --card:       #FFFFFF;
+      --cb:         rgba(0,0,0,0.07);
+      --cs:         0 1px 2px rgba(0,0,0,0.04), 0 4px 24px rgba(0,0,0,0.05);
+      --r:          14px;
+      --rl:         22px;
+    }
+    html, body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
+    }
+
+    /* ── SKY BG ── */
+    .sky-bg {
+      position: fixed; inset: 0; z-index: -2;
+      transition: background 2.2s cubic-bezier(.4,0,.2,1);
+    }
+    html[data-sky="dawn"]      .sky-bg { background: linear-gradient(168deg,#F5EDD8 0%,#EBF3EE 55%,#E6EEF5 100%); }
+    html[data-sky="morning"]   .sky-bg { background: linear-gradient(168deg,#EBF3F8 0%,#E2EEF6 55%,#D9E8F5 100%); }
+    html[data-sky="midday"]    .sky-bg { background: linear-gradient(168deg,#E5F0F8 0%,#DAE9F5 55%,#D0E2F2 100%); }
+    html[data-sky="afternoon"] .sky-bg { background: linear-gradient(168deg,#F2EDD8 0%,#EBF0E3 55%,#E4E8EE 100%); }
+    html[data-sky="golden"]    .sky-bg { background: linear-gradient(168deg,#F5E0BC 0%,#F0D5A0 45%,#EDD5C0 100%); }
+
+    /* ── SUN SYSTEM ── */
+    .sun-system {
+      position: fixed; z-index: -1; pointer-events: none;
+      width: 460px; height: 460px;
+      transition: top 2.8s cubic-bezier(.4,0,.2,1), right 2.8s cubic-bezier(.4,0,.2,1);
+    }
+    html[data-sky="dawn"]      .sun-system { top:-120px; right: 2%; }
+    html[data-sky="morning"]   .sun-system { top: -40px; right: 7%; }
+    html[data-sky="midday"]    .sun-system { top: -60px; right:22%; }
+    html[data-sky="afternoon"] .sun-system { top:  20px; right:42%; }
+    html[data-sky="golden"]    .sun-system { top:  80px; right:62%; }
+
+    .sun-glow {
+      position:absolute; inset:-80px; border-radius:50%;
+      transition: background 2.2s ease;
+    }
+    html[data-sky="dawn"]      .sun-glow { background:radial-gradient(circle,rgba(255,195,60,.22) 0%,transparent 68%); }
+    html[data-sky="morning"]   .sun-glow { background:radial-gradient(circle,rgba(255,220,70,.16) 0%,transparent 68%); }
+    html[data-sky="midday"]    .sun-glow { background:radial-gradient(circle,rgba(255,248,160,.18) 0%,transparent 68%); }
+    html[data-sky="afternoon"] .sun-glow { background:radial-gradient(circle,rgba(255,170,50,.24) 0%,transparent 68%); }
+    html[data-sky="golden"]    .sun-glow { background:radial-gradient(circle,rgba(255,100,20,.32) 0%,transparent 68%); }
+
+    .sun-disc {
+      position:absolute; top:50%; left:50%;
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      animation:sun-pulse 6s ease-in-out infinite;
+      transition:width 2.8s cubic-bezier(.4,0,.2,1),height 2.8s cubic-bezier(.4,0,.2,1),background 2.2s ease,box-shadow 2.2s ease;
+    }
+    html[data-sky="dawn"]      .sun-disc { width:160px;height:160px; background:radial-gradient(circle at 38% 36%,#FFE89A,#FFD166 55%,#FFA840); box-shadow:0 0 0 18px rgba(255,209,102,.10),0 0 0 44px rgba(255,209,102,.05),0 0 90px rgba(255,180,40,.28); }
+    html[data-sky="morning"]   .sun-disc { width:155px;height:155px; background:radial-gradient(circle at 38% 36%,#FFFDD5,#FFE860 55%,#FFD050); box-shadow:0 0 0 18px rgba(255,230,80,.08),0 0 0 44px rgba(255,230,80,.04),0 0 110px rgba(255,220,60,.18); }
+    html[data-sky="midday"]    .sun-disc { width:145px;height:145px; background:radial-gradient(circle at 38% 36%,#FFFFE5,#FFFAB5 55%,#FFE860); box-shadow:0 0 0 18px rgba(255,250,160,.10),0 0 0 44px rgba(255,250,160,.05),0 0 130px rgba(255,240,100,.18); }
+    html[data-sky="afternoon"] .sun-disc { width:168px;height:168px; background:radial-gradient(circle at 38% 36%,#FFE09A,#FFB848 55%,#FF8C28); box-shadow:0 0 0 18px rgba(255,155,40,.12),0 0 0 44px rgba(255,155,40,.06),0 0 110px rgba(255,140,30,.32); }
+    html[data-sky="golden"]    .sun-disc { width:192px;height:192px; background:radial-gradient(circle at 38% 36%,#FFD080,#FF9040 55%,#FF5520); box-shadow:0 0 0 20px rgba(255,100,20,.16),0 0 0 50px rgba(255,100,20,.07),0 0 140px rgba(255,80,20,.38); }
+
+    .sun-rays {
+      position:absolute; top:50%; left:50%;
+      width:380px; height:380px;
+      transform:translate(-50%,-50%);
+      animation:rays-spin 32s linear infinite;
+      transition:opacity 2s ease;
+    }
+    html[data-sky="midday"] .sun-rays { opacity:.65; }
+
+    @keyframes sun-pulse { 0%,100%{transform:translate(-50%,-50%) scale(1)} 50%{transform:translate(-50%,-50%) scale(1.04)} }
+    @keyframes rays-spin  { from{transform:translate(-50%,-50%) rotate(0deg)} to{transform:translate(-50%,-50%) rotate(360deg)} }
+
+    /* ── CLOUDS ── */
+    .cloud {
+      position:fixed; z-index:-1; pointer-events:none;
+      transition:opacity 2s ease,transform 2.5s ease;
+    }
+    .cloud svg { display:block; }
+    .c1 { top: 6vh; left:-1%;  animation:cf1 20s ease-in-out infinite; }
+    .c2 { top:12vh; right:-2%; animation:cf2 25s ease-in-out infinite; }
+    .c3 { top:35vh; left: 1%;  animation:cf3 30s ease-in-out infinite; opacity:.55; }
+    .c4 { top: 4vh; left:36%;  animation:cf1 38s ease-in-out infinite reverse; opacity:.30; }
+    .c5 { top:58vh; right:3%;  animation:cf2 23s ease-in-out infinite; opacity:.42; }
+    .c6 { top:78vh; left:12%;  animation:cf3 27s ease-in-out infinite; opacity:.28; }
+    @keyframes cf1 { 0%,100%{transform:translateX(0)} 50%{transform:translateX(38px)} }
+    @keyframes cf2 { 0%,100%{transform:translateX(0)} 50%{transform:translateX(-30px)} }
+    @keyframes cf3 { 0%,100%{transform:translateX(0)} 50%{transform:translateX(22px)} }
+    html[data-sky="midday"] .c1 { opacity:.18; }
+    html[data-sky="midday"] .c2 { opacity:.12; }
+    html[data-sky="midday"] .c3 { opacity:.14; }
+    html[data-sky="midday"] .c4 { opacity:.10; }
+    html[data-sky="afternoon"] .c1 { opacity:.72; }
+    html[data-sky="afternoon"] .c3 { opacity:.65; }
+    html[data-sky="golden"] .c1 { opacity:.80; transform:translateX(50px); }
+    html[data-sky="golden"] .c2 { opacity:.75; }
+    html[data-sky="golden"] .c5 { opacity:.70; }
+    html[data-sky="golden"] .c6 { opacity:.55; }
+
+    /* ── NAV ── */
+    nav {
+      position:fixed; top:0; left:0; right:0; z-index:100;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:20px 48px;
+      border-bottom:1px solid transparent;
+      transition:background .4s,border-color .4s,backdrop-filter .4s;
+    }
+    nav.scrolled {
+      background:rgba(244,238,226,.85);
+      backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+      border-color:rgba(0,0,0,.07);
+    }
+    html[data-sky="morning"] nav.scrolled,
+    html[data-sky="midday"]  nav.scrolled { background:rgba(232,242,250,.85); }
+    html[data-sky="golden"]  nav.scrolled { background:rgba(244,228,188,.85); }
+    .nav-logo { font-size:16px; font-weight:600; letter-spacing:-.01em; color:var(--text); text-decoration:none; }
+    .nav-logo span { color:var(--accent); }
+    .nav-cta {
+      font-size:13px; font-weight:500;
+      color:var(--text-2); background:rgba(255,255,255,.60);
+      border:1px solid rgba(0,0,0,.09); border-radius:9px;
+      padding:8px 18px; text-decoration:none;
+      transition:background .2s,color .2s;
+    }
+    .nav-cta:hover { background:rgba(255,255,255,.92); color:var(--text); }
+
+    /* ═══════════════════════════════════════
+       HERO — 2-column
+    ═══════════════════════════════════════ */
+    .hero {
+      position:relative; z-index:1;
+      min-height:100vh;
+      display:flex; align-items:center; justify-content:center;
+      padding:110px 24px 80px;
+    }
+    .hero-inner {
+      display:grid;
+      grid-template-columns:1fr 310px;
+      gap:72px;
+      align-items:center;
+      max-width:1060px;
+      width:100%;
+    }
+    .hero-text { text-align:left; }
+
+    .hero-badge {
+      display:inline-flex; align-items:center; gap:7px;
+      font-size:12px; font-weight:500; letter-spacing:.05em;
+      text-transform:uppercase; color:var(--accent);
+      background:var(--accent-dim);
+      border:1px solid rgba(61,123,59,.18);
+      border-radius:100px; padding:5px 14px;
+      margin-bottom:28px;
+      animation:fadeUp .5s ease both;
+    }
+    .hero-badge::before { content:''; width:6px; height:6px; background:var(--accent); border-radius:50%; }
+
+    .hero h1 {
+      font-size:clamp(38px,6vw,80px);
+      font-weight:600; letter-spacing:-.035em; line-height:1.06;
+      color:var(--text); margin-bottom:22px;
+      animation:fadeUp .5s .10s ease both;
+    }
+    .hero h1 em { font-style:italic; color:var(--accent); }
+
+    .hero-sub {
+      font-size:clamp(15px,1.8vw,18px);
+      color:var(--text-2); max-width:440px; line-height:1.68;
+      margin-bottom:40px;
+      animation:fadeUp .5s .18s ease both;
+    }
+
+    .waitlist-form {
+      display:flex; gap:10px; max-width:420px;
+      margin-bottom:16px;
+      animation:fadeUp .5s .26s ease both;
+    }
+    .waitlist-form input[type="email"] {
+      flex:1; background:rgba(255,255,255,.78);
+      border:1px solid rgba(0,0,0,.10); border-radius:var(--r);
+      color:var(--text); font-family:inherit; font-size:15px;
+      padding:13px 18px; outline:none;
+      transition:border-color .2s,background .2s;
+    }
+    .waitlist-form input::placeholder { color:var(--text-3); }
+    .waitlist-form input:focus { border-color:var(--accent); background:rgba(255,255,255,.96); }
+    .waitlist-form button {
+      background:var(--accent); color:#fff;
+      border:none; border-radius:var(--r);
+      font-family:inherit; font-size:14px; font-weight:600;
+      padding:13px 22px; cursor:pointer; white-space:nowrap;
+      transition:background .2s,transform .1s;
+    }
+    .waitlist-form button:hover { background:#316030; }
+    .waitlist-form button:active { transform:scale(.98); }
+
+    .form-note { font-size:13px; color:var(--text-3); animation:fadeUp .5s .32s ease both; }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+
+    /* ═══════════════════════════════════════
+       PHONE MOCKUP
+    ═══════════════════════════════════════ */
+    .hero-visual {
+      display:flex; align-items:center; justify-content:center;
+      animation:fadeUp .6s .4s ease both;
+    }
+    .phone-wrap { position:relative; display:flex; flex-direction:column; align-items:center; }
+
+    /* ambient glow behind phone */
+    .phone-glow {
+      position:absolute; inset:-50px;
+      border-radius:80px; pointer-events:none; z-index:0;
+      transition:background 2.2s ease;
+    }
+    html[data-sky="dawn"]      .phone-glow { background:radial-gradient(ellipse,rgba(255,200,60,.18) 0%,transparent 70%); }
+    html[data-sky="morning"]   .phone-glow { background:radial-gradient(ellipse,rgba(160,210,255,.16) 0%,transparent 70%); }
+    html[data-sky="midday"]    .phone-glow { background:radial-gradient(ellipse,rgba(140,200,255,.18) 0%,transparent 70%); }
+    html[data-sky="afternoon"] .phone-glow { background:radial-gradient(ellipse,rgba(255,175,60,.22) 0%,transparent 70%); }
+    html[data-sky="golden"]    .phone-glow { background:radial-gradient(ellipse,rgba(255,100,20,.26) 0%,transparent 70%); }
+
+    .phone {
+      position:relative; z-index:1;
+      width:258px; height:542px;
+      background:#1C1A18;
+      border-radius:50px; padding:5px;
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.09),
+        0 60px 120px rgba(0,0,0,.38),
+        0 12px 32px rgba(0,0,0,.20);
+      animation:phone-float 6s ease-in-out infinite;
+    }
+    @keyframes phone-float {
+      0%,100% { transform:perspective(1300px) rotateY(-8deg) rotateX(4deg) translateY(0); }
+      50%      { transform:perspective(1300px) rotateY(-8deg) rotateX(4deg) translateY(-14px); }
+    }
+
+    .phone-inner {
+      width:100%; height:100%;
+      background:#F4F1ED;
+      border-radius:45px;
+      overflow:hidden; position:relative;
+      display:flex; flex-direction:column;
+    }
+
+    /* status bar */
+    .p-status {
+      flex-shrink:0; height:34px;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:0 20px;
+    }
+    .p-time { font-size:11px; font-weight:600; color:#1A1A17; letter-spacing:-.01em; }
+    .p-icons { display:flex; align-items:center; gap:4px; }
+    .p-icons svg { width:13px; height:13px; stroke:#1A1A17; fill:none; stroke-width:2; stroke-linecap:round; }
+
+    /* screens */
+    .p-screens {
+      flex:1; position:relative; overflow:hidden;
+    }
+    .p-screen {
+      position:absolute; inset:0;
+      padding:10px 14px 0;
+      opacity:0; transform:translateX(20px);
+      transition:opacity .42s ease,transform .42s ease;
+      overflow:hidden;
+      pointer-events:none;
+    }
+    .p-screen.active  { opacity:1; transform:translateX(0); pointer-events:auto; }
+    .p-screen.leaving { opacity:0; transform:translateX(-20px); }
+
+    /* tab bar */
+    .p-tabs {
+      flex-shrink:0; height:64px;
+      background:rgba(255,255,255,.96);
+      backdrop-filter:blur(8px);
+      border-top:1px solid rgba(0,0,0,.06);
+      border-radius:0 0 45px 45px;
+      display:flex; align-items:center;
+      justify-content:space-around;
+      padding:0 6px 10px;
+    }
+    .p-tab {
+      flex:1; display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      gap:3px; cursor:pointer;
+      opacity:.35; transition:opacity .25s;
+    }
+    .p-tab.active { opacity:1; }
+    .p-tab svg { width:18px; height:18px; stroke:#1A1A17; fill:none; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+    .p-tab.active svg { stroke:#1A1A17; }
+    .p-tab span { font-size:9px; color:#5A5650; font-weight:400; }
+    .p-tab.active span { font-weight:600; color:#1A1A17; }
+
+    /* dots */
+    .phone-dots {
+      display:flex; justify-content:center; gap:6px; margin-top:18px;
+    }
+    .pdot {
+      height:5px; border-radius:3px; background:rgba(0,0,0,.18);
+      transition:all .35s ease;
+      width:5px;
+    }
+    .pdot.active { width:18px; background:rgba(0,0,0,.42); }
+
+    /* ────────────────────────────────────────
+       APP UI INSIDE PHONE
+    ──────────────────────────────────────── */
+    /* fonts scaled down for phone */
+    .p-screen * { font-family:'DM Sans',sans-serif; }
+
+    /* week strip */
+    .week-row {
+      display:grid; grid-template-columns:repeat(4,1fr);
+      gap:5px; margin-bottom:9px;
+    }
+    .wday {
+      background:#fff; border-radius:12px;
+      padding:7px 4px; text-align:center;
+      display:flex; flex-direction:column; align-items:center; gap:2px;
+    }
+    .wday.cur { background:#1A1A17; }
+    .wd-l { font-size:9px; color:#8A8580; font-weight:500; }
+    .wday.cur .wd-l { color:rgba(255,255,255,.65); }
+    .wd-t { font-size:13px; font-weight:600; color:#1A1A17; }
+    .wday.cur .wd-t { color:#fff; }
+    .wd-i { font-size:14px; line-height:1; }
+
+    /* app badges */
+    .abadge {
+      display:inline-block; border-radius:20px;
+      font-size:10px; font-weight:600; padding:3px 10px;
+      margin-bottom:7px;
+    }
+    .ab-fresh { background:#DCF0E5; color:#1E6840; }
+    .ab-great  { background:#E2EAF4; color:#2A5880; font-size:8px; letter-spacing:.05em; text-transform:uppercase; }
+    .ab-best   { background:#E2EAF4; color:#2A5880; font-size:8px; letter-spacing:.05em; text-transform:uppercase; }
+
+    /* day summary card */
+    .day-card {
+      background:#fff; border-radius:16px;
+      padding:12px 12px 9px; margin-bottom:8px;
+    }
+    .dc-loc { font-size:10px; color:#9A9590; margin-bottom:3px; }
+    .dc-title { font-size:15px; font-weight:600; color:#1A1A17; line-height:1.3; margin-bottom:2px; }
+    .dc-range { font-size:10px; color:#5A5650; margin-bottom:4px; }
+    .dc-desc  { font-size:10px; color:#7A7570; line-height:1.5; margin-bottom:9px; }
+    .temp-chart-wrap svg { width:100%; height:36px; display:block; }
+    .temp-times { display:flex; justify-content:space-between; font-size:8.5px; color:#AAAaA0; margin-top:3px; }
+
+    /* section label */
+    .app-sec-lbl {
+      font-size:9px; font-weight:600; letter-spacing:.08em;
+      text-transform:uppercase; color:#9A9590;
+      margin-bottom:7px; padding-left:1px;
+    }
+
+    /* activity row */
+    .act-row {
+      display:flex; align-items:center; gap:9px;
+      background:#fff; border-radius:13px;
+      padding:9px 11px; margin-bottom:5px;
+    }
+    .act-ico { font-size:18px; width:28px; text-align:center; flex-shrink:0; }
+    .act-info { flex:1; min-width:0; }
+    .act-name { font-size:12px; font-weight:600; color:#1A1A17; display:flex; align-items:center; gap:5px; }
+    .act-desc { font-size:10px; color:#8A8580; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .score {
+      border-radius:20px; padding:4px 9px;
+      font-size:11px; font-weight:600; flex-shrink:0;
+    }
+    .score-b { background:#D8E8F2; color:#2A6A8A; }
+    .score-a { background:#F2E4CC; color:#8A5218; }
+
+    /* divider */
+    .app-div { height:1px; background:rgba(0,0,0,.06); margin:8px 0; }
+
+    /* decisions card */
+    .dec-card { background:#fff; border-radius:14px; margin-bottom:8px; overflow:hidden; }
+    .dec-row {
+      display:flex; align-items:center; gap:9px;
+      padding:10px 12px;
+      border-bottom:1px solid rgba(0,0,0,.05);
+    }
+    .dec-row:last-child { border-bottom:none; }
+    .dec-ico { font-size:17px; width:26px; text-align:center; flex-shrink:0; }
+    .dec-info { flex:1; }
+    .dec-name { font-size:11px; font-weight:600; color:#1A1A17; }
+    .dec-sub  { font-size:9.5px; color:#8A8580; }
+    .dec-b { border-radius:20px; padding:4px 10px; font-size:10px; font-weight:500; flex-shrink:0; }
+    .dec-yes { background:#D5EDDF; color:#1E6B40; }
+    .dec-no  { background:#EEECEA; color:#727068; }
+
+    /* wear card */
+    .wear-card {
+      background:#fff; border-radius:14px;
+      display:grid; grid-template-columns:1fr 1fr 1fr;
+      overflow:hidden;
+    }
+    .wear-slot { padding:9px 7px; border-right:1px solid rgba(0,0,0,.05); }
+    .wear-slot:last-child { border-right:none; }
+    .wear-time { font-size:7.5px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:#9A9590; margin-bottom:4px; }
+    .wear-desc { font-size:9.5px; color:#3A3A37; line-height:1.45; }
+
+    /* window card */
+    .window-card {
+      background:#fff; border-radius:14px;
+      padding:10px 12px;
+    }
+    .win-time { font-size:18px; font-weight:600; color:#1A1A17; margin-bottom:2px; }
+    .win-desc { font-size:9.5px; color:#7A7570; margin-bottom:8px; }
+
+    /* ═══════════════════════════════════════
+       REST OF PAGE
+    ═══════════════════════════════════════ */
+    .screenshots-section {
+      position:relative; z-index:1;
+      padding:80px 24px 64px; text-align:center;
+    }
+    .sec-lbl {
+      font-size:12px; font-weight:500; letter-spacing:.08em;
+      text-transform:uppercase; color:var(--text-3); margin-bottom:44px;
+    }
+    .screenshots-img-wrap { max-width:1100px; margin:0 auto; }
+    .screenshots-img-wrap img {
+      width:100%; height:auto; display:block;
+      border-radius:20px;
+      box-shadow:0 8px 48px rgba(0,0,0,.10),0 2px 8px rgba(0,0,0,.05);
+    }
+
+    .cs {
+      position:relative; z-index:1;
+      max-width:1080px; margin:0 auto; padding:100px 24px;
+    }
+    .sec-title {
+      font-size:clamp(28px,4vw,48px);
+      font-weight:600; letter-spacing:-.028em; line-height:1.11;
+      color:var(--text); margin-bottom:16px;
+    }
+    .sec-sub { font-size:17px; color:var(--text-2); max-width:480px; line-height:1.66; }
+
+    .how-header { margin-bottom:52px; }
+    .how-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+    .how-card {
+      background:var(--card); border:1px solid var(--cb); border-radius:var(--rl);
+      padding:40px 32px; display:flex; flex-direction:column; gap:18px;
+      box-shadow:var(--cs); transition:transform .25s,box-shadow .25s;
+    }
+    .how-card:hover { transform:translateY(-4px); box-shadow:0 2px 4px rgba(0,0,0,.04),0 10px 36px rgba(0,0,0,.09); }
+    .how-card-icon {
+      width:46px; height:46px; border-radius:13px;
+      background:var(--accent-dim); border:1px solid rgba(61,123,59,.14);
+      display:flex; align-items:center; justify-content:center;
+    }
+    .how-card-icon svg { width:20px;height:20px; stroke:var(--accent); fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+    .how-card-tag { font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); }
+    .how-card h3 { font-size:22px; font-weight:600; letter-spacing:-.02em; color:var(--text); line-height:1.25; }
+    .how-card p { font-size:15px; color:var(--text-2); line-height:1.74; flex:1; }
+    .how-card-detail { font-size:13px; color:var(--text-3); border-top:1px solid rgba(0,0,0,.05); padding-top:18px; line-height:1.6; }
+
+    /* ── ACTIVITY LAYER ── */
+
+    /* ── LANDSCAPE SCENE ── */
+    .act-landscape {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      height: 26vh; z-index: 0; pointer-events: none;
+      overflow: visible;
+    }
+
+    /* Terrain SVG (hills + city silhouette) */
+    .act-terrain {
+      position: absolute; bottom: 0; left: 0;
+      width: 100%; height: 100%;
+      color: var(--text); opacity: 0.07;
+      transition: opacity 2s ease;
+    }
+    html[data-sky="dawn"]      .act-terrain { opacity: 0.080; }
+    html[data-sky="morning"]   .act-terrain { opacity: 0.065; }
+    html[data-sky="midday"]    .act-terrain { opacity: 0.050; }
+    html[data-sky="afternoon"] .act-terrain { opacity: 0.065; }
+    html[data-sky="golden"]    .act-terrain { opacity: 0.090; }
+
+
+    .act-bird {
+      position: fixed; z-index: 0; pointer-events: none;
+      color: var(--text-2);
+      transition: opacity 1.8s ease;
+    }
+    .act-bird svg { display: block; }
+    .ab-1 { top: 15%; opacity: 0.10; animation: birdFloat 56s linear infinite; animation-delay: -8s; }
+    .ab-1 svg { width: 28px; height: 13px; }
+    .ab-2 { top: 21%; opacity: 0.08; animation: birdFloat 44s linear infinite; animation-delay: -31s; }
+    .ab-2 svg { width: 20px; height: 9px; }
+    .ab-3 { top: 11%; opacity: 0.07; animation: birdFloat 68s linear infinite; animation-delay: -52s; }
+    .ab-3 svg { width: 16px; height: 8px; }
+    @keyframes birdFloat {
+      0%   { transform: translateX(-60px); }
+      100% { transform: translateX(108vw); }
+    }
+
+    html[data-sky="dawn"]      .act-bird { opacity-adjust: 1; }
+    html[data-sky="golden"]    .act-bird { filter: opacity(.4); }
+    html[data-sky="afternoon"] .act-bird { filter: opacity(.6); }
+
+    /* Hide on mobile to keep it clean */
+    @media(max-width:600px) { .act-landscape, .act-bird { display:none; } }
+
+    /* ── BRIEF CARD (replaces old sample-wrapper) ── */
+    .brief-card {
+      background:var(--card); border:1px solid var(--cb);
+      border-radius:var(--rl); overflow:hidden; box-shadow:var(--cs);
+    }
+    .brief-hd {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:18px 28px;
+      border-bottom:1px solid rgba(0,0,0,.05);
+      background:rgba(248,248,246,.55);
+    }
+    .brief-meta { display:flex; gap:8px; align-items:center; font-size:13px; color:var(--text-3); }
+    .brief-loc  { font-weight:600; color:var(--text-2); }
+    .brief-cond { display:flex; align-items:center; gap:7px; font-size:13px; color:var(--text-2); }
+    .brief-cdot { width:7px;height:7px; background:var(--accent); border-radius:50%; opacity:.6; }
+    .brief-headline {
+      padding:22px 28px 18px;
+      display:flex; justify-content:space-between; align-items:baseline;
+      border-bottom:1px solid rgba(0,0,0,.05);
+      gap:16px;
+    }
+    .brief-vibe  { font-size:clamp(17px,2vw,22px); font-weight:600; letter-spacing:-.02em; color:var(--text); }
+    .brief-win   { font-size:14px; color:var(--text-2); white-space:nowrap; }
+    .brief-win strong { color:var(--accent); font-weight:600; }
+
+    /* three tiles */
+    .brief-tiles { display:grid; grid-template-columns:repeat(3,1fr); }
+    .brief-tile {
+      padding:24px 24px 22px;
+      border-right:1px solid rgba(0,0,0,.05);
+      display:flex; flex-direction:column; gap:10px;
+    }
+    .brief-tile:last-child { border-right:none; }
+
+    .bt-icon {
+      width:40px; height:40px; border-radius:11px;
+      display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    }
+    .bt-icon svg { width:18px;height:18px; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+    .bt-move .bt-icon { background:rgba(61,123,59,.10); }
+    .bt-move .bt-icon svg { stroke:#3D7B3B; }
+    .bt-feel .bt-icon { background:rgba(42,96,140,.10); }
+    .bt-feel .bt-icon svg { stroke:#2A608C; }
+    .bt-live .bt-icon { background:rgba(160,100,20,.10); }
+    .bt-live .bt-icon svg { stroke:#8A5410; }
+
+    .bt-tag { font-size:11px; font-weight:600; letter-spacing:.09em; text-transform:uppercase; }
+    .bt-move .bt-tag { color:#3D7B3B; }
+    .bt-feel .bt-tag { color:#2A608C; }
+    .bt-live .bt-tag { color:#8A5410; }
+
+    .bt-title { font-size:17px; font-weight:600; letter-spacing:-.018em; color:var(--text); line-height:1.2; }
+    .bt-body  { font-size:14px; color:var(--text-2); line-height:1.62; flex:1; }
+
+    /* Move — progress bar */
+    .bt-meter-row { display:flex; align-items:center; gap:10px; }
+    .bt-meter { flex:1; height:4px; background:rgba(0,0,0,.08); border-radius:2px; overflow:hidden; }
+    .bt-meter-fill { height:100%; border-radius:2px; background:#3D7B3B; }
+    .bt-score-lbl  { font-size:12px; font-weight:600; color:var(--text-3); }
+
+    /* Feel — energy dots */
+    .bt-energy { display:flex; gap:5px; align-items:center; }
+    .edot { width:8px;height:8px; border-radius:50%; }
+    .edot.on  { background:#2A608C; }
+    .edot.off { background:rgba(0,0,0,.10); }
+    .bt-energy-label { font-size:12px; color:var(--text-3); margin-left:6px; }
+
+    /* Live — yes/no decisions */
+    .bt-decs { display:flex; flex-direction:column; gap:5px; }
+    .bt-dec  { display:flex; align-items:center; gap:7px; font-size:13px; color:var(--text-2); }
+    .ddot    { width:6px;height:6px; border-radius:50%; flex-shrink:0; }
+    .ddot-y  { background:#3D7B3B; }
+    .ddot-n  { background:rgba(0,0,0,.22); }
+
+    /* Timeline */
+    .brief-tl { padding:18px 28px; border-top:1px solid rgba(0,0,0,.05); }
+    .tl-track {
+      height:6px; background:rgba(0,0,0,.07); border-radius:3px;
+      position:relative; margin-bottom:9px; overflow:visible;
+    }
+    .tl-fill {
+      position:absolute; top:0; bottom:0; border-radius:3px;
+      background:var(--accent); opacity:.7;
+    }
+    .tl-now {
+      position:absolute; top:-3px; bottom:-3px; width:2px;
+      background:var(--text-2); border-radius:1px;
+    }
+    .tl-labels {
+      display:flex; justify-content:space-between;
+      font-size:11px; color:var(--text-3); letter-spacing:.01em;
+    }
+    .tl-note { font-size:12px; color:var(--accent); font-weight:500; margin-top:7px; }
+
+    .brief-ft {
+      border-top:1px solid rgba(61,123,59,.08);
+      background:rgba(61,123,59,.03);
+      padding:13px 28px; font-size:13px; color:var(--text-3);
+      display:flex; align-items:center; gap:8px;
+    }
+    .brief-ft::before { content:'';width:5px;height:5px;background:var(--accent);border-radius:50%;opacity:.4;flex-shrink:0; }
+
+    /* Brief header extras */
+    .brief-date { font-size:14px; font-weight:600; color:var(--text); letter-spacing:-.01em; }
+    .brief-loc  { font-size:12px; color:var(--text-3); margin-top:2px; }
+
+    /* Best window badge */
+    .bw-label { font-size:11px; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:var(--text-3); display:block; margin-bottom:3px; }
+    .bw-time  { font-size:16px; font-weight:700; color:var(--accent); letter-spacing:-.02em; }
+
+    /* Meter label + value */
+    .bt-meter-label { font-size:12px; color:var(--text-3); white-space:nowrap; }
+    .bt-meter-val   { font-size:12px; font-weight:700; color:var(--text-2); min-width:22px; }
+
+    /* Energy dots (bt-dot pattern) */
+    .bt-dot { width:9px;height:9px; border-radius:50%; background:rgba(0,0,0,.10); flex-shrink:0; }
+    .bt-dot.filled { background:#2A608C; }
+    .bt-dots { display:flex; gap:5px; align-items:center; }
+    .bt-energy-val { font-size:12px; font-weight:600; color:var(--text-3); }
+
+    /* Decision rows (bt-dec-ok / bt-dec-no) */
+    .bt-dec svg { width:14px;height:14px;flex-shrink:0; }
+    .bt-dec-ok { color:var(--text-2); }
+    .bt-dec-ok svg { stroke:#3D7B3B; }
+    .bt-dec-no { color:var(--text-3); text-decoration:line-through; text-decoration-color:rgba(0,0,0,.25); }
+    .bt-dec-no svg { stroke:rgba(0,0,0,.30); }
+
+    /* Responsive brief tiles */
+    @media(max-width:680px) {
+      .brief-tiles { grid-template-columns:1fr; }
+      .brief-tile  { border-right:none; border-bottom:1px solid rgba(0,0,0,.05); }
+      .brief-tile:last-child { border-bottom:none; }
+      .brief-headline { flex-direction:column; gap:10px; }
+    }
+
+    /* ── EXCERPT SECTION ── */
+    .exc-section { padding:100px 48px; }
+    .exc-layout {
+      max-width:1080px; margin:0 auto;
+      display:grid; grid-template-columns:1fr 1.15fr; gap:72px; align-items:center;
+    }
+    .exc-text .sec-title { margin-bottom:18px; }
+    .exc-text .sec-sub   { max-width:380px; }
+
+    /* Category stamps */
+    .exc-stamps { display:flex; gap:8px; margin-top:32px; flex-wrap:wrap; }
+    .exc-stamp {
+      padding:6px 16px; border-radius:99px; font-size:12px; font-weight:700;
+      letter-spacing:.07em; text-transform:uppercase;
+    }
+    .est-move { background:rgba(61,123,59,.12);  color:#3D7B3B; }
+    .est-feel { background:rgba(42,96,140,.12);  color:#2A608C; }
+    .est-live { background:rgba(138,84,16,.12);  color:#8A5410; }
+
+    /* The floating card */
+    .exc-visual { display:flex; justify-content:center; }
+    .exc-card {
+      width:100%; max-width:420px;
+      background:var(--card); border:1px solid var(--cb);
+      border-radius:24px; overflow:hidden; box-shadow:0 24px 64px rgba(0,0,0,.10), 0 4px 16px rgba(0,0,0,.06);
+      animation: excFloat 5s ease-in-out infinite;
+    }
+    @keyframes excFloat {
+      0%,100% { transform: translateY(0px) rotate(-.4deg); }
+      50%      { transform: translateY(-12px) rotate(.3deg); }
+    }
+
+    /* Mini status bar */
+    .exc-sb {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:16px 22px 10px; font-size:12px; color:var(--text-3);
+    }
+    .exc-greeting { font-weight:600; color:var(--text-2); font-size:13px; }
+    .exc-time     { font-size:12px; letter-spacing:.03em; }
+
+    /* Context row */
+    .exc-context {
+      display:flex; justify-content:space-between; align-items:flex-end;
+      padding:0 22px 18px; border-bottom:1px solid rgba(0,0,0,.06);
+    }
+    .exc-city      { font-size:12px; color:var(--text-3); margin-bottom:4px; }
+    .exc-big-temp  { font-size:42px; font-weight:700; letter-spacing:-.04em; color:var(--text); line-height:1; margin-right:10px; }
+    .exc-cond      { font-size:13px; color:var(--text-3); }
+    .exc-temp-line { display:flex; align-items:baseline; }
+    .exc-sun-badge {
+      width:44px; height:44px; border-radius:14px;
+      background:rgba(255,185,48,.15); display:flex; align-items:center; justify-content:center;
+    }
+    .exc-sun-badge svg { width:22px;height:22px; stroke:rgba(200,130,0,.8); }
+
+    /* The three rows */
+    .exc-rows { padding:8px 0; }
+    .exc-row {
+      display:flex; align-items:stretch; gap:0;
+      padding:0; border-bottom:1px solid rgba(0,0,0,.04);
+      opacity:0; transform:translateY(14px);
+      transition: opacity .5s ease, transform .5s ease;
+    }
+    .exc-row:last-child { border-bottom:none; }
+    .exc-row.row-in { opacity:1; transform:translateY(0); }
+
+    .exr-accent { width:3px; flex-shrink:0; }
+    .exr-move .exr-accent { background:#3D7B3B; }
+    .exr-feel .exr-accent { background:#2A608C; }
+    .exr-live .exr-accent { background:#A0641C; }
+
+    .exr-inner { flex:1; padding:18px 20px 16px; }
+    .exr-top   { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+
+    .exr-cat {
+      font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+    }
+    .exr-move .exr-cat { color:#3D7B3B; }
+    .exr-feel .exr-cat { color:#2A608C; }
+    .exr-live .exr-cat { color:#A0641C; }
+
+    .exr-pill {
+      font-size:11px; font-weight:600; padding:3px 10px;
+      border-radius:99px; letter-spacing:.01em;
+    }
+    .epill-move { background:rgba(61,123,59,.10); color:#3D7B3B; }
+    .epill-feel { background:rgba(42,96,140,.10); color:#2A608C; }
+    .epill-live { background:rgba(160,100,28,.10); color:#A0641C; }
+
+    .exr-headline { font-size:18px; font-weight:650; letter-spacing:-.022em; color:var(--text); line-height:1.2; margin-bottom:5px; }
+    .exr-sub      { font-size:13px; color:var(--text-3); line-height:1.55; }
+
+    .exc-card-ft {
+      font-size:11px; color:var(--text-3); text-align:center;
+      padding:12px 22px 16px; border-top:1px solid rgba(0,0,0,.05);
+      background:rgba(61,123,59,.02);
+    }
+
+    /* Responsive */
+    @media(max-width:820px) {
+      .exc-section  { padding:72px 24px; }
+      .exc-layout   { grid-template-columns:1fr; gap:40px; }
+      .exc-text     { text-align:center; }
+      .exc-text .sec-sub { max-width:100%; }
+      .exc-stamps   { justify-content:center; }
+    }
+
+    .cta-section { text-align:center; }
+    .cta-section .sec-sub { margin:16px auto 48px; max-width:440px; }
+
+    footer {
+      position:relative; z-index:1;
+      border-top:1px solid rgba(0,0,0,.07);
+      padding:32px 48px; display:flex; align-items:center; justify-content:space-between;
+    }
+    .fl { font-size:14px;font-weight:600;letter-spacing:-.01em;color:var(--text-3); }
+    .fl span { color:var(--accent); }
+    .fn { font-size:13px; color:var(--text-3); }
+    .footer-links { display:flex; gap:20px; align-items:center; }
+    .footer-links a { font-size:13px; color:var(--text-3); text-decoration:none; transition:color .15s; }
+    .footer-links a:hover { color:var(--accent); }
+
+    /* reveal */
+    .rev { opacity:0; transform:translateY(26px); transition:opacity .65s ease,transform .65s ease; }
+    .rev.in { opacity:1; transform:translateY(0); }
+
+    /* responsive */
+    @media (max-width:900px) {
+      nav { padding:20px 24px; }
+      .hero-inner { grid-template-columns:1fr; gap:48px; }
+      .hero-text { text-align:center; }
+      .hero-sub { max-width:100%; }
+      .waitlist-form { max-width:100%; }
+      .hero-visual { order:-1; }
+      .how-grid { grid-template-columns:1fr; }
+      .sample-wrapper { grid-template-columns:1fr; gap:32px; }
+      footer { flex-direction:column; gap:16px; text-align:center; }
+      .footer-links { justify-content:center; }
+    }
+    @media (max-width:600px) {
+      .waitlist-form { flex-direction:column; }
+      .waitlist-form button { width:100%; }
+      .cs { padding:72px 20px; }
+      .sun-system { display:none; }
+      .cloud { display:none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sky-bg"></div>
+
+  <!-- Sun -->
+  <div class="sun-system">
+    <div class="sun-glow"></div>
+    <div class="sun-disc" id="sunDisc"></div>
+    <div class="sun-rays" id="sunRays"></div>
+  </div>
+
+  <!-- Activity layer: runner + birds -->
+  <!-- Activity landscape scene -->
+  <div class="act-landscape" aria-hidden="true">
+
+    <!-- Terrain: rolling hills + city skyline on right -->
+    <svg class="act-terrain" viewBox="0 0 1440 200" preserveAspectRatio="none" fill="currentColor">
+      <!-- Left hill (large, gradual) -->
+      <ellipse cx="180" cy="280" rx="520" ry="190"/>
+      <!-- Centre hill -->
+      <ellipse cx="660" cy="295" rx="480" ry="170"/>
+      <!-- Far right hill (behind city) -->
+      <ellipse cx="1250" cy="305" rx="400" ry="145"/>
+      <!-- City skyline right side -->
+      <rect x="1048" y="98"  width="16"  height="102"/>
+      <rect x="1070" y="72"  width="22"  height="128"/>
+      <rect x="1098" y="84"  width="14"  height="116"/>
+      <rect x="1118" y="52"  width="28"  height="148"/><!-- tallest -->
+      <rect x="1153" y="76"  width="18"  height="124"/>
+      <rect x="1178" y="88"  width="13"  height="112"/>
+      <rect x="1198" y="95"  width="20"  height="105"/>
+      <rect x="1226" y="82"  width="16"  height="118"/>
+      <rect x="1249" y="106" width="14"  height="94"/>
+      <!-- Antenna on tallest building -->
+      <rect x="1130" y="44"  width="3"   height="9"/>
+      <circle cx="1131.5" cy="43" r="2"/>
+      <!-- A few lit windows (tiny squares) -->
+      <rect x="1073" y="82"  width="4" height="4" opacity="0.6"/>
+      <rect x="1073" y="94"  width="4" height="4" opacity="0.6"/>
+      <rect x="1122" y="62"  width="5" height="5" opacity="0.5"/>
+      <rect x="1122" y="75"  width="5" height="5" opacity="0.5"/>
+      <rect x="1156" y="86"  width="4" height="4" opacity="0.6"/>
+      <!-- Ground line -->
+      <rect x="0" y="193" width="1440" height="7"/>
+    </svg>
+
+  </div>
+
+  <div class="act-bird ab-1">
+    <svg viewBox="0 0 30 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+      <path d="M0 7 Q7.5 1 15 7 Q22.5 1 30 7"/>
+    </svg>
+  </div>
+  <div class="act-bird ab-2">
+    <svg viewBox="0 0 22 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+      <path d="M0 5 Q5.5 0 11 5 Q16.5 0 22 5"/>
+    </svg>
+  </div>
+  <div class="act-bird ab-3">
+    <svg viewBox="0 0 18 9" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+      <path d="M0 4.5 Q4.5 0 9 4.5 Q13.5 0 18 4.5"/>
+    </svg>
+  </div>
+
+  <!-- Clouds -->
+  <div class="cloud c1"><svg width="260" height="96" viewBox="0 0 260 96"><ellipse cx="130" cy="68" rx="120" ry="28" fill="white"/><ellipse cx="86" cy="54" rx="62" ry="46" fill="white"/><ellipse cx="172" cy="50" rx="56" ry="42" fill="white"/><ellipse cx="128" cy="44" rx="46" ry="38" fill="white"/></svg></div>
+  <div class="cloud c2"><svg width="220" height="84" viewBox="0 0 220 84"><ellipse cx="110" cy="60" rx="100" ry="24" fill="white"/><ellipse cx="74" cy="48" rx="54" ry="40" fill="white"/><ellipse cx="150" cy="44" rx="50" ry="36" fill="white"/><ellipse cx="110" cy="38" rx="40" ry="30" fill="white"/></svg></div>
+  <div class="cloud c3"><svg width="180" height="70" viewBox="0 0 180 70"><ellipse cx="90" cy="50" rx="80" ry="20" fill="white"/><ellipse cx="58" cy="38" rx="44" ry="32" fill="white"/><ellipse cx="124" cy="35" rx="40" ry="28" fill="white"/></svg></div>
+  <div class="cloud c4"><svg width="320" height="82" viewBox="0 0 320 82"><ellipse cx="160" cy="60" rx="150" ry="22" fill="white"/><ellipse cx="106" cy="46" rx="72" ry="38" fill="white"/><ellipse cx="216" cy="42" rx="68" ry="34" fill="white"/><ellipse cx="160" cy="38" rx="54" ry="28" fill="white"/></svg></div>
+  <div class="cloud c5"><svg width="200" height="78" viewBox="0 0 200 78"><ellipse cx="100" cy="54" rx="90" ry="24" fill="white"/><ellipse cx="64" cy="42" rx="50" ry="36" fill="white"/><ellipse cx="140" cy="38" rx="46" ry="32" fill="white"/></svg></div>
+  <div class="cloud c6"><svg width="160" height="62" viewBox="0 0 160 62"><ellipse cx="80" cy="44" rx="72" ry="18" fill="white"/><ellipse cx="52" cy="34" rx="38" ry="28" fill="white"/><ellipse cx="112" cy="30" rx="34" ry="24" fill="white"/></svg></div>
+
+  <!-- Nav -->
+  <nav id="nav">
+    <a href="#" class="nav-logo">Day<span>wise</span></a>
+    <a href="#waitlist" class="nav-cta">Get early access</a>
+  </nav>
+
+  <!-- ══════════ HERO ══════════ -->
+  <div class="hero" id="hero" data-sky-trigger="dawn">
+    <div class="hero-inner">
+
+      <!-- Left: text -->
+      <div class="hero-text">
+        <div class="hero-badge">Early access · Coming soon</div>
+        <h1>Know your day<br />before it <em>starts.</em></h1>
+        <p class="hero-sub">
+          Daywise reads the forecast and tells you exactly what to do —
+          when to move, what to wear, how to pace your energy.
+          No radar. No guesswork.
+        </p>
+        <form class="waitlist-form" id="hero-form" onsubmit="doSubmit(event,'hero-form','hero-btn')">
+          <input type="email" placeholder="Your email address" required autocomplete="email" />
+          <button type="submit" id="hero-btn">Join the waitlist</button>
+        </form>
+        <p class="form-note">Free early access · No spam · Unsubscribe anytime</p>
+      </div>
+
+      <!-- Right: phone mockup -->
+      <div class="hero-visual">
+        <div class="phone-wrap">
+          <div class="phone-glow"></div>
+          <div class="phone">
+            <div class="phone-inner">
+
+              <!-- Status bar -->
+              <div class="p-status">
+                <span class="p-time">7:58</span>
+                <div class="p-icons">
+                  <!-- signal -->
+                  <svg viewBox="0 0 24 24"><rect x="2" y="16" width="3" height="5" rx="1"/><rect x="7" y="12" width="3" height="9" rx="1"/><rect x="12" y="8" width="3" height="13" rx="1"/><rect x="17" y="4" width="3" height="17" rx="1" opacity=".3"/></svg>
+                  <!-- wifi -->
+                  <svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0114.08 0M1.42 9a16 16 0 0121.16 0M8.53 16.11a6 6 0 016.95 0" stroke-width="2"/><circle cx="12" cy="20" r="1" fill="#1A1A17" stroke="none"/></svg>
+                  <!-- battery -->
+                  <svg viewBox="0 0 24 24"><rect x="2" y="7" width="18" height="10" rx="2"/><rect x="20" y="10" width="2" height="4" rx="1"/><rect x="3.5" y="8.5" width="14" height="7" rx="1" fill="#1A1A17" stroke="none"/></svg>
+                </div>
+              </div>
+
+              <!-- Screens -->
+              <div class="p-screens">
+
+                <!-- Screen 0: Home -->
+                <div class="p-screen active" id="ps-0">
+                  <div class="week-row">
+                    <div class="wday cur"><span class="wd-l">Today</span><span class="wd-t">15°</span><span class="wd-i">⛅</span></div>
+                    <div class="wday"><span class="wd-l">Thu</span><span class="wd-t">13°</span><span class="wd-i">🌤</span></div>
+                    <div class="wday"><span class="wd-l">Fri</span><span class="wd-t">13°</span><span class="wd-i">🌧</span></div>
+                    <div class="wday"><span class="wd-l">Sat</span><span class="wd-t">10°</span><span class="wd-i">☁️</span></div>
+                  </div>
+                  <div class="abadge ab-fresh">Fresh</div>
+                  <div class="day-card">
+                    <div class="dc-loc">Krupka · Wednesday, Mar 18</div>
+                    <div class="dc-title">A fresh, crisp day ahead</div>
+                    <div class="dc-range">1°C – 15°C</div>
+                    <div class="dc-desc">Cool air and clear skies. Best window 14:00–16:00.</div>
+                    <div class="temp-chart-wrap">
+                      <svg viewBox="0 0 200 40" preserveAspectRatio="none">
+                        <path d="M0,36 C18,33 30,26 48,20 C64,14 80,9 100,8 C118,8 140,12 170,18 C185,21 195,24 200,26" fill="none" stroke="#4A7AA0" stroke-width="2" stroke-linecap="round"/>
+                        <circle cx="26" cy="34" r="3" fill="#4A7AA0"/>
+                        <line x1="0" y1="40" x2="200" y2="40" stroke="rgba(0,0,0,.06)" stroke-width="1"/>
+                      </svg>
+                    </div>
+                    <div class="temp-times"><span>6am</span><span>12pm</span><span>6pm</span><span>9pm</span></div>
+                  </div>
+                  <div class="app-sec-lbl">Today is good for</div>
+                  <div class="act-row">
+                    <span class="act-ico">🏋️</span>
+                    <div class="act-info">
+                      <div class="act-name">Gym <span class="abadge ab-best" style="margin:0;padding:2px 6px">BEST TODAY</span></div>
+                      <div class="act-desc">Good gym day</div>
+                    </div>
+                    <div class="score score-b">7/10</div>
+                  </div>
+                  <div class="act-row" style="margin-top:0">
+                    <span class="act-ico">🏃</span>
+                    <div class="act-info">
+                      <div class="act-name">Run</div>
+                      <div class="act-desc">Best before wind rises</div>
+                    </div>
+                    <div class="score score-b">7/10</div>
+                  </div>
+                </div>
+
+                <!-- Screen 1: Move -->
+                <div class="p-screen" id="ps-1">
+                  <div style="font-size:18px;font-weight:600;color:#1A1A17;margin-bottom:2px">Your activities</div>
+                  <div style="font-size:10px;color:#8A8580;margin-bottom:10px">Scores based on weather in Krupka</div>
+                  <div class="app-sec-lbl">Your activities</div>
+                  <div class="act-row">
+                    <span class="act-ico">🏋️</span>
+                    <div class="act-info"><div class="act-name">Gym</div><div class="act-desc">Good gym day</div></div>
+                    <div class="score score-b">7/10</div>
+                  </div>
+                  <div class="act-row">
+                    <span class="act-ico">🏃</span>
+                    <div class="act-info"><div class="act-name">Run</div><div class="act-desc">Perfect sunrise run</div></div>
+                    <div class="score score-b">6/10</div>
+                  </div>
+                  <div class="act-row">
+                    <span class="act-ico">🚶</span>
+                    <div class="act-info"><div class="act-name">Walk</div><div class="act-desc">Okay for a walk, dress accordingly</div></div>
+                    <div class="score score-a">5/10</div>
+                  </div>
+                  <div class="app-div"></div>
+                  <div class="app-sec-lbl">Also great today</div>
+                  <div class="act-row">
+                    <span class="act-ico">🧖</span>
+                    <div class="act-info">
+                      <div class="act-name">Sauna <span class="abadge ab-great" style="margin:0;padding:2px 5px;font-size:7.5px">GREAT</span></div>
+                      <div class="act-desc">Good sauna day</div>
+                    </div>
+                    <div class="score score-b">7/10</div>
+                  </div>
+                  <div class="act-row">
+                    <span class="act-ico">🧘</span>
+                    <div class="act-info">
+                      <div class="act-name">Yoga <span class="abadge ab-great" style="margin:0;padding:2px 5px;font-size:7.5px">GREAT</span></div>
+                      <div class="act-desc">Morning yoga window</div>
+                    </div>
+                    <div class="score score-b">6/10</div>
+                  </div>
+                </div>
+
+                <!-- Screen 2: Live -->
+                <div class="p-screen" id="ps-2">
+                  <div style="font-size:18px;font-weight:600;color:#1A1A17;margin-bottom:10px">Live your day</div>
+                  <div class="app-sec-lbl">Quick decisions</div>
+                  <div class="dec-card">
+                    <div class="dec-row">
+                      <span class="dec-ico">☂️</span>
+                      <div class="dec-info"><div class="dec-name">Umbrella</div><div class="dec-sub">Low rain probability all day</div></div>
+                      <div class="dec-b dec-no">No</div>
+                    </div>
+                    <div class="dec-row">
+                      <span class="dec-ico">🕶️</span>
+                      <div class="dec-info"><div class="dec-name">Sunglasses</div><div class="dec-sub">UV index reaches 4.2 midday</div></div>
+                      <div class="dec-b dec-yes">Yes</div>
+                    </div>
+                    <div class="dec-row">
+                      <span class="dec-ico">🧥</span>
+                      <div class="dec-info"><div class="dec-name">Extra layer for evening</div><div class="dec-sub">Feels like 7°C in the evening</div></div>
+                      <div class="dec-b dec-yes">Yes</div>
+                    </div>
+                  </div>
+                  <div class="app-sec-lbl">What to wear</div>
+                  <div class="wear-card">
+                    <div class="wear-slot">
+                      <div class="wear-time">Morning</div>
+                      <div class="wear-desc">Heavy coat, scarf & gloves</div>
+                    </div>
+                    <div class="wear-slot">
+                      <div class="wear-time">Afternoon</div>
+                      <div class="wear-desc">Warm coat with layers</div>
+                    </div>
+                    <div class="wear-slot">
+                      <div class="wear-time">Evening</div>
+                      <div class="wear-desc">Warm coat + extra layer</div>
+                    </div>
+                  </div>
+                  <div style="margin-top:8px" class="app-sec-lbl">Best window for errands</div>
+                  <div class="window-card">
+                    <div class="win-time">14:00 – 16:00</div>
+                    <div class="win-desc">Around 11°C, low rain chance</div>
+                  </div>
+                </div>
+
+              </div><!-- /p-screens -->
+
+              <!-- Tab bar -->
+              <div class="p-tabs">
+                <div class="p-tab active" data-s="0">
+                  <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                  <span>Home</span>
+                </div>
+                <div class="p-tab" data-s="1">
+                  <svg viewBox="0 0 24 24"><path d="M13 4a4 4 0 11-8 0 4 4 0 018 0zM17.196 4.55a9 9 0 010 14.9M5 20h4m-2-7v7"/></svg>
+                  <span>Move</span>
+                </div>
+                <div class="p-tab" data-s="-1">
+                  <svg viewBox="0 0 24 24"><path d="M12 22V12M8.56 2a16.07 16.07 0 000 20M15.44 2a16.07 16.07 0 010 20M2 12h20"/></svg>
+                  <span>Feel</span>
+                </div>
+                <div class="p-tab" data-s="2">
+                  <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                  <span>Live</span>
+                </div>
+                <div class="p-tab" data-s="-1">
+                  <svg viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/><circle cx="8" cy="6" r="2" fill="white"/><circle cx="16" cy="12" r="2" fill="white"/><circle cx="10" cy="18" r="2" fill="white"/></svg>
+                  <span>Settings</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Dots -->
+          <div class="phone-dots">
+            <div class="pdot active"></div>
+            <div class="pdot"></div>
+            <div class="pdot"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Screenshots -->
+  <div class="screenshots-section" id="screens" data-sky-trigger="morning">
+    <p class="sec-lbl">The app</p>
+    <div class="screenshots-img-wrap rev">
+      <img src="daywise_appstore_v2.png" alt="Daywise app — Move, Live, Feel" loading="lazy" />
+    </div>
+  </div>
+
+  <!-- How it works -->
+  <section class="cs" id="how" data-sky-trigger="midday">
+    <div class="how-header rev">
+      <p class="sec-lbl">How it works</p>
+      <h2 class="sec-title">Three lenses.<br />One morning glance.</h2>
+      <p class="sec-sub">The forecast stays in the background. What you see is what it means for you.</p>
+    </div>
+    <div class="how-grid">
+      <div class="how-card rev" style="transition-delay:.04s">
+        <div class="how-card-icon"><svg viewBox="0 0 24 24"><path d="M13 5l7 7-7 7M5 12h15"/></svg></div>
+        <div class="how-card-tag">Move</div>
+        <h3>Find your window.</h3>
+        <p>Every day has a moment where being outside just works. Daywise finds it — and tells you what to do with it. Run, walk, ride, or simply sit in the sun.</p>
+        <div class="how-card-detail">Activity scores · Best time windows · Conditions by hour</div>
+      </div>
+      <div class="how-card rev" style="transition-delay:.10s">
+        <div class="how-card-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></div>
+        <div class="how-card-tag">Feel</div>
+        <h3>Understand your energy.</h3>
+        <p>Pressure drops, humidity spikes, temperature swings — these affect how you feel, even when you don't know why. Daywise translates what the weather is doing to your body.</p>
+        <div class="how-card-detail">Energy forecast · Mood signals · Rest vs. push guidance</div>
+      </div>
+      <div class="how-card rev" style="transition-delay:.17s">
+        <div class="how-card-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 21V9"/></svg></div>
+        <div class="how-card-tag">Live</div>
+        <h3>Make smarter calls.</h3>
+        <p>What to wear. Whether to bring the jacket. When to head out and when to stay in. The small daily decisions — made before you leave the door.</p>
+        <div class="how-card-detail">Outfit guidance · Commute timing · Day structure suggestions</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sample output -->
+  <section class="cs exc-section" id="sample" data-sky-trigger="afternoon">
+
+    <div class="exc-layout">
+
+      <!-- Left: text -->
+      <div class="exc-text rev">
+        <p class="sec-lbl">Sample output</p>
+        <h2 class="sec-title" style="font-size:clamp(28px,3.5vw,42px)">Three lines.<br/>That's your day.</h2>
+        <p class="sec-sub">Every morning Daywise reads the forecast and gives you one answer per category — no charts, no jargon. Just what you need before you walk out the door.</p>
+        <div class="exc-stamps">
+          <div class="exc-stamp est-move">Move</div>
+          <div class="exc-stamp est-feel">Feel</div>
+          <div class="exc-stamp est-live">Live</div>
+        </div>
+      </div>
+
+      <!-- Right: large app card -->
+      <div class="exc-visual rev" style="transition-delay:.14s">
+
+        <!-- Mini status bar (phone feel) -->
+        <div class="exc-card" id="excCard">
+          <div class="exc-sb">
+            <span class="exc-greeting">Good morning</span>
+            <span class="exc-time">7:04</span>
+          </div>
+          <div class="exc-context">
+            <div class="exc-ctx-left">
+              <div class="exc-city">Prague · Tuesday</div>
+              <div class="exc-temp-line"><span class="exc-big-temp">11°</span><span class="exc-cond">Partly cloudy</span></div>
+            </div>
+            <div class="exc-sun-badge">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+            </div>
+          </div>
+
+          <!-- The three rows — these animate in -->
+          <div class="exc-rows">
+
+            <div class="exc-row exr-move" id="exRow0">
+              <div class="exr-accent"></div>
+              <div class="exr-inner">
+                <div class="exr-top">
+                  <span class="exr-cat">Move</span>
+                  <span class="exr-pill epill-move">Best before 10am</span>
+                </div>
+                <div class="exr-headline">Good morning for a run.</div>
+                <div class="exr-sub">Wind is calm now. Picks up after 2pm — move early.</div>
+              </div>
+            </div>
+
+            <div class="exc-row exr-feel" id="exRow1">
+              <div class="exr-accent"></div>
+              <div class="exr-inner">
+                <div class="exr-top">
+                  <span class="exr-cat">Feel</span>
+                  <span class="exr-pill epill-feel">Rest-day energy</span>
+                </div>
+                <div class="exr-headline">Pressure is dropping.</div>
+                <div class="exr-sub">Expect lower focus in the afternoon. Lighter schedule works better today.</div>
+              </div>
+            </div>
+
+            <div class="exc-row exr-live" id="exRow2">
+              <div class="exr-accent"></div>
+              <div class="exr-inner">
+                <div class="exr-top">
+                  <span class="exr-cat">Live</span>
+                  <span class="exr-pill epill-live">Jacket ✓ · No umbrella</span>
+                </div>
+                <div class="exr-headline">Light layers today.</div>
+                <div class="exr-sub">Windproof jacket in the morning. Leave umbrella home — rain holds until 6pm.</div>
+              </div>
+            </div>
+
+          </div><!-- /exc-rows -->
+
+          <div class="exc-card-ft">Updated at 6:30 am · Based on your location</div>
+        </div>
+
+      </div><!-- /exc-visual -->
+
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cs cta-section" id="waitlist" data-sky-trigger="golden">
+    <div class="rev">
+      <p class="sec-lbl">Early access</p>
+      <h2 class="sec-title">You're the kind of person<br />this was made for.</h2>
+      <p class="sec-sub">Daywise is in early access. Be first in when we open the doors — and help shape what it becomes.</p>
+      <form class="waitlist-form" id="cta-form" style="justify-content:center" onsubmit="doSubmit(event,'cta-form','cta-btn')">
+        <input type="email" placeholder="Your email address" required autocomplete="email" />
+        <button type="submit" id="cta-btn">Get early access</button>
+      </form>
+      <p class="form-note">Free · No spam · Unsubscribe anytime</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="fl">Day<span>wise</span></div>
+    <div class="footer-links">
+      <a href="daywise-privacy.html">Privacy Policy</a>
+      <a href="daywise-terms.html">Terms of Service</a>
+      <a href="daywise-support.html">Support</a>
+    </div>
+    <div class="fn">© 2026 Daywise. All rights reserved.</div>
+  </footer>
+
+  <script>
+    /* ── Sun rays ── */
+    const raysEl = document.getElementById('sunRays');
+    for (let i = 0; i < 16; i++) {
+      const isMain = i % 2 === 0;
+      const len = isMain ? 82 : 54, dist = 112;
+      const angle = (360/16)*i, rad = (angle-90)*Math.PI/180;
+      const x = Math.cos(rad)*dist, y = Math.sin(rad)*dist;
+      const s = document.createElement('span');
+      s.className = 'ray';
+      s.style.cssText = `position:absolute;width:${isMain?3.5:2}px;height:${len}px;left:calc(50% + ${x}px - ${isMain?1.75:1}px);top:calc(50% + ${y-len/2}px);transform:rotate(${angle}deg);transform-origin:50% 0%;border-radius:4px;animation:rayPulse ${3.5+(i%5)*.45}s ease-in-out ${i*.11}s infinite alternate;`;
+      raysEl.appendChild(s);
+    }
+    const rayPalette = { dawn:'rgba(255,185,48,.58)', morning:'rgba(255,210,58,.44)', midday:'rgba(255,242,120,.48)', afternoon:'rgba(255,155,38,.58)', golden:'rgba(255,100,24,.64)' };
+    function setRayColor(sky) {
+      const c = rayPalette[sky]||rayPalette.dawn;
+      raysEl.querySelectorAll('.ray').forEach(r => r.style.background=`linear-gradient(to bottom,${c},transparent)`);
+    }
+    setRayColor('dawn');
+
+    /* ── Sky triggers ── */
+    const html = document.documentElement;
+    new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { const s=e.target.dataset.skyTrigger; html.setAttribute('data-sky',s); setRayColor(s); }});
+    }, {threshold:.25}).observe && document.querySelectorAll('[data-sky-trigger]').forEach(t =>
+      new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) { const s=e.target.dataset.skyTrigger; html.setAttribute('data-sky',s); setRayColor(s); }});
+      }, {threshold:.25}).observe(t)
+    );
+
+    /* ── Nav ── */
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 40), {passive:true});
+
+    /* ── Scroll reveal ── */
+    const ro = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); ro.unobserve(e.target); }}), {threshold:.12});
+    document.querySelectorAll('.rev').forEach(el => ro.observe(el));
+
+    /* ── Phone cycling ── */
+    const screens    = [0,1,2]; // active screen indices
+    const screenEls  = screens.map(i => document.getElementById(`ps-${i}`));
+    const tabEls     = document.querySelectorAll('.p-tab');
+    const dotEls     = document.querySelectorAll('.pdot');
+    let cur = 0, timer;
+
+    function showScreen(idx) {
+      // hide current
+      screenEls[cur].classList.remove('active');
+      screenEls[cur].classList.add('leaving');
+      setTimeout(() => screenEls[cur].classList.remove('leaving'), 460);
+      // show next
+      cur = idx;
+      screenEls[cur].classList.add('active');
+      // dots
+      dotEls.forEach((d,i) => d.classList.toggle('active', i===cur));
+      // tabs: map screen index to tab position
+      const tabMap = {0:0, 1:1, 2:3}; // Home→0, Move→1, Live→3
+      tabEls.forEach((t,i) => t.classList.toggle('active', i===tabMap[cur]));
+    }
+
+    function nextScreen() { showScreen((cur+1)%3); }
+    timer = setInterval(nextScreen, 4200);
+
+    tabEls.forEach((tab, ti) => {
+      const sMap = {0:0, 1:1, 3:2}; // tab index → screen index
+      tab.addEventListener('click', () => {
+        if (sMap[ti] !== undefined) {
+          clearInterval(timer);
+          showScreen(sMap[ti]);
+          timer = setInterval(nextScreen, 4200);
+        }
+      });
+    });
+
+    /* ── Excerpt rows sequential reveal ── */
+    (function() {
+      const excRows = [
+        document.getElementById('exRow0'),
+        document.getElementById('exRow1'),
+        document.getElementById('exRow2')
+      ];
+      let rowsTriggered = false;
+      function revealRows() {
+        if (rowsTriggered) return;
+        rowsTriggered = true;
+        excRows.forEach((row, i) => {
+          if (row) setTimeout(() => row.classList.add('row-in'), i * 260 + 120);
+        });
+      }
+      const excCard = document.getElementById('excCard');
+      if (excCard) {
+        new IntersectionObserver(entries => {
+          entries.forEach(e => { if (e.isIntersecting) revealRows(); });
+        }, { threshold: 0.3 }).observe(excCard);
+      }
+    })();
+
+    /* ── Waitlist ── */
+    function doSubmit(e, fId, bId) {
+      e.preventDefault();
+      const f=document.getElementById(fId), b=document.getElementById(bId);
+      b.textContent="You're on the list ✓";
+      b.style.background='#2D5C2B';
+      b.disabled=f.querySelector('input').disabled=true;
+      f.querySelector('input').style.opacity='.5';
+    }
+  </script>
+  <style>
+    @keyframes rayPulse { from{opacity:.30} to{opacity:1} }
+  </style>
+</body>
+</html>
